@@ -1,0 +1,23 @@
+{
+  "es": {
+    "html_helpers": {
+      "types": {
+        "option": "Seleccione un tipo"
+      },
+      "others": "Documentos de la contratación",
+      "one": "Documento"
+    },
+    "attributes": {
+      "document_type": "Tipo de documento",
+      "file": "Archivo",
+      "signature_required": "¿Requiere firma?",
+      "person_email": "Correo electrónico personal del Trabajador",
+      "company_email": "Correo electrónico de quien autoriza - Empleador",
+      "client_email": "Correo electrónico del Cliente"
+    },
+    "action": {
+      "add": "Agregar documento",
+      "remove": "Borrar documento"
+    }
+  }
+}

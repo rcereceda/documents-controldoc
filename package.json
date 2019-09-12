@@ -16,7 +16,6 @@
     "test": "cross-env CI=1 react-scripts test --env=jsdom",
     "test:watch": "react-scripts test --env=jsdom",
     "build": "rollup -c",
-    "start": "rollup -c -w",
     "prepare": "yarn run build",
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build"
@@ -57,5 +56,11 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "i18next": "^17.0.14",
+    "react-i18next": "^10.12.4",
+    "react-select": "^3.0.4",
+    "rollup-plugin-json": "^4.0.0"
+  }
 }

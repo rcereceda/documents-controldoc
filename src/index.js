@@ -1,22 +1,20 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React from "react";
+import Documents from "./components/Documents/index.jsx";
+import { I18nextProvider } from "react-i18next";
+import i18n from "./i18n/index.js";
 
-import styles from './styles.css'
+const MultipleDocuments = props => {
+  return (
+    <I18nextProvider i18n={i18n}>
+      <Documents
+        documents={props.documents || []}
+        document_types={props.document_types || []}
+        person_email={props.person_email}
+        company_email={props.company_email}
+        form_name={props.form_name}
+      />
+    </I18nextProvider>
+  );
+};
 
-export default class ExampleComponent extends Component {
-  static propTypes = {
-    text: PropTypes.string
-  }
-
-  render() {
-    const {
-      text
-    } = this.props
-
-    return (
-      <div className={styles.test}>
-        Example Component: {text}
-      </div>
-    )
-  }
-}
+export default MultipleDocuments;

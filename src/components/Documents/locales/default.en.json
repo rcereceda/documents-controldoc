@@ -1,0 +1,23 @@
+{
+  "en": {
+    "html_helpers": {
+      "types": {
+        "option": "Select a type"
+      },
+      "others": "Documents of hiring",
+      "one": "Document"
+    },
+    "attributes": {
+      "document_type": "Document type",
+      "file": "File",
+      "signature_required": "¿Requires signature?",
+      "person_email": "Employee personal email",
+      "company_email": "Employer email",
+      "client_email": "Client email"
+    },
+    "action": {
+      "add": "Add document",
+      "remove": "Remove document"
+    }
+  }
+}
