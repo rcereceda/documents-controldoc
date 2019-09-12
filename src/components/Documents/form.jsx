@@ -1,10 +1,7 @@
 import React, { useState, memo } from "react";
-import Select from "react-select";
 import DocumentTypeSelect from "./document_type_select.jsx";
 import DocumentValueInput from "./document_value_input.jsx";
-import InputError from "./error.jsx";
 import PropTypes from "prop-types";
-import _ from "lodash";
 
 const DocumentForm = props => {
   const {
@@ -18,14 +15,12 @@ const DocumentForm = props => {
   const [document_type_id, setDocumentTypeId] = useState(
     document.document_type_id
   );
-  const [document_for_client, setDocumentForClient] = useState(false);
-  const [file, setFile] = useState(document.file);
+  const [document_for_client, setDocumentForClient] = useState(
+    document.for_client
+  );
   const [signature_required, setSignatureRequired] = useState(
     document.signature_required
   );
-  const [person_email, setPersonEmail] = useState(document.person_email);
-  const [company_email, setCompanyEmail] = useState(document.company_email);
-  const [client_email, setClientEmail] = useState(document.client_email);
   const validSignature =
     document.valid_person_signature ||
     document.valid_company_signature ||
@@ -94,21 +89,13 @@ const DocumentForm = props => {
       case "document_type_id":
         setDocumentTypeId(value);
         break;
-      case "file":
-        setFile(value);
-        break;
       case "signature_required":
         setSignatureRequired(value);
         break;
       case "person_email":
-        setPersonEmail(value);
         handleKeyUp(key, value);
         break;
-      case "company_email":
-        setCompanyEmail(value);
-        break;
       case "client_email":
-        setClientEmail(value);
         handleKeyUp(key, value);
         break;
       case "document_for_client":

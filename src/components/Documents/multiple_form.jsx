@@ -12,7 +12,7 @@ const MultipleForm = props => {
     let documentsTemp = [...props.documents];
     documentsTemp.forEach(document => {
       const key = Math.floor(Math.random() * 1000000000000);
-      document.hasOwnProperty("key") ? document : (document["key"] = key);
+      if (!document.hasOwnProperty("key")) document["key"] = key;
     });
     setDocuments(documentsTemp);
   }, []);
@@ -45,9 +45,9 @@ const MultipleForm = props => {
     });
 
     if (
-      arr[found].id == "" ||
-      typeof arr[found].id == "undefined" ||
-      arr[found].id == undefined
+      arr[found].id === "" ||
+      typeof arr[found].id === "undefined" ||
+      arr[found].id === undefined
     )
       arr.splice(found, 1);
     else arr[found]["_destroy"] = true;
@@ -63,7 +63,7 @@ const MultipleForm = props => {
       return document;
     });
 
-    if (key == "person_email") setPersonEmail(value);
+    if (key === "person_email") setPersonEmail(value);
     else setClientEmail(value);
 
     setDocuments(documentsTemp);

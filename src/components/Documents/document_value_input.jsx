@@ -20,14 +20,14 @@ class DocumentValueInput extends React.Component {
 
   static getDerivedStateFromProps(props, state) {
     if (
-      props.attribute == "person_email" &&
+      props.attribute === "person_email" &&
       state.person_email !== props.document.person_email
     ) {
       return {
         person_email: props.document.person_email
       };
     } else if (
-      props.attribute == "client_email" &&
+      props.attribute === "client_email" &&
       state.client_email !== props.document.client_email
     ) {
       return {
@@ -40,15 +40,7 @@ class DocumentValueInput extends React.Component {
 
   drawDocumentValue() {
     const { type, attribute, document, name, valid_signature } = this.props;
-    let {
-      signature_required,
-      file,
-      person_email,
-      company_email,
-      client_email
-    } = this.state;
-    let constant;
-    eval("constant = " + attribute);
+    let state_attribute = this.state[attribute];
 
     switch (type) {
       case "file":
@@ -73,7 +65,7 @@ class DocumentValueInput extends React.Component {
             <input
               className="form-control"
               type={type}
-              value={constant === null ? undefined : constant}
+              value={state_attribute || ""}
               name={`${name}[${attribute}]`}
               onChange={this.handleInputChange}
             />
@@ -92,17 +84,19 @@ class DocumentValueInput extends React.Component {
           return (
             <input
               type={type}
-              checked={constant}
+              checked={state_attribute}
               name={`${name}[${attribute}]`}
               onChange={this.handleInputChange}
             />
           );
         }
+      default:
+        break;
     }
   }
 
   drawFileLink() {
-    if (this.props.type == "file") {
+    if (this.props.type === "file") {
       let url = this.props.document.file.url;
       let filename = "";
       if (url !== undefined && url !== null) filename = _.last(url.split("/"));
@@ -119,24 +113,21 @@ class DocumentValueInput extends React.Component {
   handleInputChange(event) {
     const { attribute } = this.props;
     let input = event.target;
-    let set_value = input.type == "checkbox" ? input.checked : input.value;
+    let set_value = input.type === "checkbox" ? input.checked : input.value;
 
     this.setState({ [attribute]: set_value });
     this.props.handleChangeStatus(attribute, set_value);
   }
 
   handleFileChange(event) {
-    const target = event.target.id;
-    let reader = new FileReader();
     let file = event.target.files[0];
 
     this.setState({ file });
-    this.props.handleChangeStatus("file", file);
   }
 
   render() {
     let { valid_signature, type } = this.props;
-    let isCheckbox = type == "checkbox";
+    let isCheckbox = type === "checkbox";
 
     return (
       <div className={`form-group row ${isCheckbox ? "text-center" : ""}`}>
