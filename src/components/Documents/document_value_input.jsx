@@ -98,7 +98,7 @@ class DocumentValueInput extends React.Component {
   drawFileLink() {
     let { type, document } = this.props;
 
-    if (type === "file" && _.isEmpty(document.errors)) {
+    if (type === "file" && _.isInteger(document.id)) {
       let url = document.file.url;
       let filename = "";
       if (url !== undefined && url !== null) filename = _.last(url.split("/"));
