@@ -21,7 +21,6 @@ const MultipleForm = props => {
     event.preventDefault();
     const key = Math.floor(Math.random() * 1000000000000);
     let documentsTemp = [...documents];
-    const order = documentsTemp.length + 1;
 
     documentsTemp.push({
       id: "",
@@ -31,8 +30,7 @@ const MultipleForm = props => {
       company_email: props.company_email,
       person_email: person_email,
       client_email: client_email,
-      key: key,
-      order: order
+      key: key
     });
 
     setDocuments(documentsTemp);

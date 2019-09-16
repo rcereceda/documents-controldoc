@@ -84,7 +84,7 @@ class DocumentValueInput extends React.Component {
           return (
             <input
               type={type}
-              checked={state_attribute}
+              checked={state_attribute || false}
               name={`${name}[${attribute}]`}
               onChange={this.handleInputChange}
             />
@@ -96,18 +96,17 @@ class DocumentValueInput extends React.Component {
   }
 
   drawFileLink() {
-    if (this.props.type === "file") {
-      let url = this.props.document.file.url;
-      let filename = "";
-      if (url !== undefined && url !== null) filename = _.last(url.split("/"));
-      return (
-        <div className="float-right">
-          <a href={url} target="_blank">
-            {filename}
-          </a>
-        </div>
-      );
-    }
+    let url = this.props.document.file.url;
+    let filename = "";
+    if (url !== undefined && url !== null) filename = _.last(url.split("/"));
+
+    return (
+      <div className="float-right">
+        <a href={url} target="_blank">
+          {filename}
+        </a>
+      </div>
+    );
   }
 
   handleInputChange(event) {
@@ -126,8 +125,10 @@ class DocumentValueInput extends React.Component {
   }
 
   render() {
-    let { valid_signature, type } = this.props;
+    let { type, document } = this.props;
     let isCheckbox = type === "checkbox";
+    let isFile = type === "file";
+    let persisted = _.isInteger(document.id);
 
     return (
       <div className={`form-group row ${isCheckbox ? "text-center" : ""}`}>
@@ -135,7 +136,7 @@ class DocumentValueInput extends React.Component {
           <label htmlFor="" className="label-bold">
             {this.props.label}
           </label>
-          {valid_signature ? "" : this.drawFileLink()}
+          {!persisted && isFile ? this.drawFileLink() : ""}
           <div className={isCheckbox ? "" : "input-group"}>
             {this.drawDocumentValue()}
           </div>
