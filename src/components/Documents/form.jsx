@@ -165,12 +165,12 @@ const DocumentForm = props => {
             <input
               type="hidden"
               name={`${name}[id]`}
-              value={document.id || undefined}
+              value={document.id || ""}
             />
             <input
               type="hidden"
               name={`${name}[_destroy]`}
-              value={document._destroy || undefined}
+              value={document._destroy || false}
             />
           </div>
         </div>
