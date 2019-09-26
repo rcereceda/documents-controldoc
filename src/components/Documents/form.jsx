@@ -21,6 +21,9 @@ const DocumentForm = props => {
   const [signature_required, setSignatureRequired] = useState(
     document.signature_required
   );
+  const [upload_required, setUploadRequired] = useState(
+    document.upload_required
+  );
   const validSignature =
     document.valid_person_signature ||
     document.valid_company_signature ||
@@ -58,6 +61,8 @@ const DocumentForm = props => {
         label={options["label"]}
         attribute={options["attribute"]}
         valid_signature={validSignature}
+        signature_required={signature_required}
+        upload_required={upload_required}
         handleChangeStatus={handleChangeStatus}
       />
     );
@@ -91,6 +96,11 @@ const DocumentForm = props => {
         break;
       case "signature_required":
         setSignatureRequired(value);
+        if (value && upload_required) setUploadRequired(!value);
+        break;
+      case "upload_required":
+        setUploadRequired(value);
+        if (value && signature_required) setSignatureRequired(!value);
         break;
       case "person_email":
         handleKeyUp(key, value);
@@ -114,51 +124,80 @@ const DocumentForm = props => {
             <div className="float-right">{drawDeleteButton()}</div>
             <div className="card-body pt-0">
               <div className="row d-flex">
-                <div className="col-md-5 flex-fill px-3">
-                  {drawDocumentType()}
+                <div className="col-md-9 flex-fill px-3">
+                  <div className="row">
+                    <div className="col-md-6 flex-fill px-3">
+                      {drawDocumentType()}
+                    </div>
+                    <div className="col-md-6 flex-fill px-3">
+                      {drawDocumentValue({
+                        type: "file",
+                        attribute: "file",
+                        label: t("documents.attributes.file")
+                      })}
+                    </div>
+                  </div>
                 </div>
-                <div className="col-md-5 flex-fill px-3">
-                  {drawDocumentValue({
-                    type: "file",
-                    attribute: "file",
-                    label: t("documents.attributes.file")
-                  })}
-                </div>
-                <div className="col-md-2 flex-fill px-3">
+                <div className="col-md-3 flex-fill px-3">
                   {drawDocumentValue({
                     type: "checkbox",
                     attribute: "signature_required",
                     label: t("documents.attributes.signature_required")
                   })}
+                  {drawDocumentValue({
+                    type: "checkbox",
+                    attribute: "upload_required",
+                    label: t("documents.attributes.upload_required")
+                  })}
                 </div>
               </div>
               <div
-                className={`row ${signature_required ? "d-flex" : "d-none"}`}
+                className={`row ${
+                  signature_required || upload_required ? "d-flex" : "d-none"
+                }`}
               >
-                <div
-                  className={`col-md-5 ${document_for_client ? "d-none" : ""}`}
-                >
-                  {drawDocumentValue({
-                    type: "text",
-                    attribute: "person_email",
-                    label: t("documents.attributes.person_email")
-                  })}
-                </div>
-                <div
-                  className={`col-md-5 ${document_for_client ? "" : "d-none"}`}
-                >
-                  {drawDocumentValue({
-                    type: "text",
-                    attribute: "client_email",
-                    label: t("documents.attributes.client_email")
-                  })}
-                </div>
-                <div className="col-md-5">
-                  {drawDocumentValue({
-                    type: "text",
-                    attribute: "company_email",
-                    label: t("documents.attributes.company_email")
-                  })}
+                <div className="col-md-9 flex-fill px-3">
+                  <div className="row">
+                    <div
+                      className={`col-md-6 ${
+                        upload_required
+                          ? ""
+                          : document_for_client
+                          ? "d-none"
+                          : ""
+                      }`}
+                    >
+                      {drawDocumentValue({
+                        type: "text",
+                        attribute: "person_email",
+                        label: t("documents.attributes.person_email")
+                      })}
+                    </div>
+                    <div
+                      className={`col-md-6 ${
+                        upload_required
+                          ? "d-none"
+                          : document_for_client
+                          ? ""
+                          : "d-none"
+                      }`}
+                    >
+                      {drawDocumentValue({
+                        type: "text",
+                        attribute: "client_email",
+                        label: t("documents.attributes.client_email")
+                      })}
+                    </div>
+                    <div
+                      className={`col-md-6 ${upload_required ? "d-none" : ""}`}
+                    >
+                      {drawDocumentValue({
+                        type: "text",
+                        attribute: "company_email",
+                        label: t("documents.attributes.company_email")
+                      })}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

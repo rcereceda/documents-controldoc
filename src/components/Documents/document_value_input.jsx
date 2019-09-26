@@ -8,6 +8,7 @@ class DocumentValueInput extends React.Component {
     this.state = {
       file: props.document.file,
       signature_required: props.document.signature_required,
+      upload_required: props.document.upload_required,
       person_email: props.document.person_email,
       company_email: props.document.company_email,
       client_email: props.document.client_email
@@ -18,20 +19,20 @@ class DocumentValueInput extends React.Component {
     this.handleFileChange = this.handleFileChange.bind(this);
   }
 
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(nextProps, prevState) {
     if (
-      props.attribute === "person_email" &&
-      state.person_email !== props.document.person_email
+      nextProps.attribute === "person_email" &&
+      prevState.person_email !== nextProps.document.person_email
     ) {
       return {
-        person_email: props.document.person_email
+        person_email: nextProps.document.person_email
       };
     } else if (
-      props.attribute === "client_email" &&
-      state.client_email !== props.document.client_email
+      nextProps.attribute === "client_email" &&
+      prevState.client_email !== nextProps.document.client_email
     ) {
       return {
-        client_email: props.document.client_email
+        client_email: nextProps.document.client_email
       };
     }
 
@@ -39,7 +40,15 @@ class DocumentValueInput extends React.Component {
   }
 
   drawDocumentValue() {
-    const { type, attribute, document, name, valid_signature } = this.props;
+    const {
+      type,
+      attribute,
+      document,
+      name,
+      valid_signature,
+      upload_required,
+      signature_required
+    } = this.props;
     let state_attribute = this.state[attribute];
 
     switch (type) {
@@ -72,24 +81,59 @@ class DocumentValueInput extends React.Component {
           );
         }
       case "checkbox":
-        if (valid_signature) {
-          return (
-            <span
-              className={`badge badge-pill ml-1 badge-${document.label.style}`}
-            >
-              {document.label.text}
-            </span>
-          );
-        } else {
-          return (
-            <input
-              type={type}
-              checked={state_attribute || false}
-              name={`${name}[${attribute}]`}
-              onChange={this.handleInputChange}
-            />
-          );
+        switch (attribute) {
+          case "signature_required":
+            if (valid_signature) {
+              return (
+                <span
+                  className={`badge badge-pill ml-1 badge-${document.label.style}`}
+                >
+                  {document.label.text}
+                </span>
+              );
+            } else {
+              return (
+                <div className="custom-control custom-switch">
+                  <input
+                    id={`switch_${attribute}_${document.key}`}
+                    className="custom-control-input label-bold"
+                    type={type}
+                    checked={signature_required || false}
+                    name={`${name}[${attribute}]`}
+                    onChange={this.handleInputChange}
+                  />
+                  <label
+                    className="custom-control-label"
+                    htmlFor={`switch_${attribute}_${document.key}`}
+                  >
+                    {this.props.label}
+                  </label>
+                </div>
+              );
+            }
+          case "upload_required":
+            return (
+              <div className="custom-control custom-switch">
+                <input
+                  id={`switch_${attribute}_${document.key}`}
+                  className="custom-control-input label-bold"
+                  type={type}
+                  checked={upload_required || false}
+                  name={`${name}[${attribute}]`}
+                  onChange={this.handleInputChange}
+                />
+                <label
+                  className="custom-control-label"
+                  htmlFor={`switch_${attribute}_${document.key}`}
+                >
+                  {this.props.label}
+                </label>
+              </div>
+            );
+          default:
+            break;
         }
+        break;
       default:
         break;
     }
@@ -113,6 +157,14 @@ class DocumentValueInput extends React.Component {
     }
   }
 
+  drawLabel() {
+    return (
+      <label htmlFor="" className="label-bold">
+        {this.props.label}
+      </label>
+    );
+  }
+
   handleInputChange(event) {
     const { attribute } = this.props;
     let input = event.target;
@@ -133,11 +185,9 @@ class DocumentValueInput extends React.Component {
     let isCheckbox = type === "checkbox";
 
     return (
-      <div className={`form-group row ${isCheckbox ? "text-center" : ""}`}>
+      <div className="form-group row">
         <div className="flex-fill px-3">
-          <label htmlFor="" className="label-bold">
-            {this.props.label}
-          </label>
+          {isCheckbox ? "" : this.drawLabel()}
           {valid_signature ? "" : this.drawFileLink()}
           <div className={isCheckbox ? "" : "input-group"}>
             {this.drawDocumentValue()}

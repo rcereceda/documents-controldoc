@@ -26,6 +26,7 @@ const MultipleForm = props => {
       id: "",
       document_type_id: "",
       signature_required: "",
+      upload_required: "",
       file: "",
       company_email: props.company_email,
       person_email: person_email,

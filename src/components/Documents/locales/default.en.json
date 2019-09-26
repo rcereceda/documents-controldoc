@@ -11,6 +11,7 @@
       "document_type": "Document type",
       "file": "File",
       "signature_required": "¿Requires signature?",
+      "upload_required": "¿Uploaded by employee?",
       "person_email": "Employee personal email",
       "company_email": "Employer email",
       "client_email": "Client email"
