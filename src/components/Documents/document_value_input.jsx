@@ -112,24 +112,26 @@ class DocumentValueInput extends React.Component {
               );
             }
           case "upload_required":
-            return (
-              <div className="custom-control custom-switch">
-                <input
-                  id={`switch_${attribute}_${document.key}`}
-                  className="custom-control-input label-bold"
-                  type={type}
-                  checked={upload_required || false}
-                  name={`${name}[${attribute}]`}
-                  onChange={this.handleInputChange}
-                />
-                <label
-                  className="custom-control-label"
-                  htmlFor={`switch_${attribute}_${document.key}`}
-                >
-                  {this.props.label}
-                </label>
-              </div>
-            );
+            if (!valid_signature) {
+              return (
+                <div className="custom-control custom-switch">
+                  <input
+                    id={`switch_${attribute}_${document.key}`}
+                    className="custom-control-input label-bold"
+                    type={type}
+                    checked={upload_required || false}
+                    name={`${name}[${attribute}]`}
+                    onChange={this.handleInputChange}
+                  />
+                  <label
+                    className="custom-control-label"
+                    htmlFor={`switch_${attribute}_${document.key}`}
+                  >
+                    {this.props.label}
+                  </label>
+                </div>
+              );
+            }
           default:
             break;
         }
