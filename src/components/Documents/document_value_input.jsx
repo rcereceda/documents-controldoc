@@ -96,14 +96,14 @@ class DocumentValueInput extends React.Component {
                 <div className="custom-control custom-switch">
                   <input
                     id={`switch_${attribute}_${document.key}`}
-                    className="custom-control-input label-bold"
+                    className="custom-control-input"
                     type={type}
                     checked={signature_required || false}
                     name={`${name}[${attribute}]`}
                     onChange={this.handleInputChange}
                   />
                   <label
-                    className="custom-control-label"
+                    className="custom-control-label label-bold"
                     htmlFor={`switch_${attribute}_${document.key}`}
                   >
                     {this.props.label}
@@ -117,14 +117,14 @@ class DocumentValueInput extends React.Component {
                 <div className="custom-control custom-switch">
                   <input
                     id={`switch_${attribute}_${document.key}`}
-                    className="custom-control-input label-bold"
+                    className="custom-control-input"
                     type={type}
                     checked={upload_required || false}
                     name={`${name}[${attribute}]`}
                     onChange={this.handleInputChange}
                   />
                   <label
-                    className="custom-control-label"
+                    className="custom-control-label label-bold"
                     htmlFor={`switch_${attribute}_${document.key}`}
                   >
                     {this.props.label}
