@@ -132,6 +132,7 @@ class DocumentValueInput extends React.Component {
                 </div>
               );
             }
+            break;
           default:
             break;
         }
@@ -141,13 +142,24 @@ class DocumentValueInput extends React.Component {
     }
   }
 
+  formatFilename(url) {
+    var filename = _.last(url.split("/"));
+
+    if (filename.length > 25) {
+      return filename.substring(0, 25).concat("...");
+    } else {
+      return filename;
+    }
+  }
+
   drawFileLink() {
     let { type, document } = this.props;
 
     if (type === "file" && _.isInteger(document.id)) {
       let url = document.file.url;
       let filename = "";
-      if (url !== undefined && url !== null) filename = _.last(url.split("/"));
+      if (url !== undefined && url !== null)
+        filename = this.formatFilename(url);
 
       return (
         <div className="float-right">
