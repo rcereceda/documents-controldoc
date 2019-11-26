@@ -113,7 +113,7 @@ class DocumentValueInput extends React.Component {
               );
             }
           case "upload_required":
-            if (!valid_signature || !rejected) {
+            if (!valid_signature && !rejected) {
               return (
                 <div className="custom-control custom-switch">
                   <input
