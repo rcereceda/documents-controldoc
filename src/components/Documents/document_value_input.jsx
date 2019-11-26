@@ -50,10 +50,11 @@ class DocumentValueInput extends React.Component {
       signature_required
     } = this.props;
     let state_attribute = this.state[attribute];
+    let rejected = document.state === "rejected";
 
     switch (type) {
       case "file":
-        if (valid_signature) {
+        if (valid_signature || rejected) {
           return this.drawFileLink();
         } else {
           return (
@@ -67,7 +68,7 @@ class DocumentValueInput extends React.Component {
           );
         }
       case "text":
-        if (valid_signature) {
+        if (valid_signature || rejected) {
           return <div>{this.const_attribute}</div>;
         } else {
           return (
@@ -83,7 +84,7 @@ class DocumentValueInput extends React.Component {
       case "checkbox":
         switch (attribute) {
           case "signature_required":
-            if (valid_signature) {
+            if (valid_signature || rejected) {
               return (
                 <span
                   className={`badge badge-pill ml-1 badge-${document.label.style}`}
@@ -112,7 +113,7 @@ class DocumentValueInput extends React.Component {
               );
             }
           case "upload_required":
-            if (!valid_signature) {
+            if (!valid_signature || !rejected) {
               return (
                 <div className="custom-control custom-switch">
                   <input
@@ -195,21 +196,19 @@ class DocumentValueInput extends React.Component {
   }
 
   render() {
-    let { valid_signature, type } = this.props;
+    let { document, attribute, valid_signature, type } = this.props;
     let isCheckbox = type === "checkbox";
+    let rejected = document.state === "rejected";
 
     return (
       <div className="form-group row">
         <div className="flex-fill px-3">
           {isCheckbox ? "" : this.drawLabel()}
-          {valid_signature ? "" : this.drawFileLink()}
+          {valid_signature || rejected ? "" : this.drawFileLink()}
           <div className={isCheckbox ? "" : "input-group"}>
             {this.drawDocumentValue()}
           </div>
-          <InputError
-            attr={this.props.attribute}
-            errors={this.props.document.errors}
-          />
+          <InputError attr={attribute} errors={document.errors} />
         </div>
       </div>
     );

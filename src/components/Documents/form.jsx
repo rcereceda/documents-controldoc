@@ -28,6 +28,7 @@ const DocumentForm = props => {
     document.valid_person_signature ||
     document.valid_company_signature ||
     document.valid_client_signature;
+  const rejected = document.state === "rejected";
 
   const handleDelete = event => {
     event.preventDefault();
@@ -69,7 +70,7 @@ const DocumentForm = props => {
   };
 
   const drawDeleteButton = () => {
-    if (validSignature) {
+    if (validSignature || rejected) {
       return <div className="mb-3" />;
     } else {
       return (

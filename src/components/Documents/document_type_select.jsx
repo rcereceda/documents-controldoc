@@ -3,8 +3,9 @@ import Select from "react-select";
 import InputError from "./error.jsx";
 
 const DocumentTypeSelect = props => {
-  const { t, name, options, valid_signature } = props;
+  const { t, name, options, document, valid_signature } = props;
   const [document_type_id, setDocumentType] = useState(props.document_type_id);
+  const rejected = document.state === "rejected";
 
   useEffect(() => {
     setDocumentType(props.document_type_id);
@@ -16,7 +17,7 @@ const DocumentTypeSelect = props => {
         return item.value === document_type_id;
       }) || [];
 
-    if (valid_signature) {
+    if (valid_signature || rejected) {
       return <div>{value.label}</div>;
     } else {
       return (
@@ -43,7 +44,7 @@ const DocumentTypeSelect = props => {
         Tipo de Documento
       </label>
       {drawDocumentType()}
-      <InputError attr="document_type" errors={props.document.errors} />
+      <InputError attr="document_type" errors={document.errors} />
     </div>
   );
 };
