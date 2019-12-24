@@ -3,7 +3,7 @@ import DocumentForm from "./form.jsx";
 import _ from "lodash";
 
 const MultipleForm = props => {
-  const { t, name, document_types } = props;
+  const { t, name, document_types, signer_types, company_email } = props;
   const [documents, setDocuments] = useState([]);
   const [person_email, setPersonEmail] = useState(props.person_email);
   const [client_email, setClientEmail] = useState("");
@@ -21,6 +21,18 @@ const MultipleForm = props => {
     event.preventDefault();
     const key = Math.floor(Math.random() * 1000000000000);
     let documentsTemp = [...documents];
+    let person_signer_type_id = _.get(
+      _.find(signer_types, { type: "person" }),
+      "value"
+    );
+    let company_signer_type_id = _.get(
+      _.find(signer_types, { type: "company" }),
+      "value"
+    );
+    let client_signer_type_id = _.get(
+      _.find(signer_types, { type: "client" }),
+      "value"
+    );
 
     documentsTemp.push({
       id: "",
@@ -28,28 +40,64 @@ const MultipleForm = props => {
       signature_required: "",
       upload_required: "",
       file: "",
-      company_email: props.company_email,
+      company_email: company_email,
       person_email: person_email,
       client_email: client_email,
-      key: key
+      key: key,
+      signers_attributes: [
+        {
+          signer_type_id: person_signer_type_id,
+          email: person_email,
+          key: key + person_signer_type_id
+        },
+        {
+          signer_type_id: company_signer_type_id,
+          email: company_email,
+          key: key + company_signer_type_id
+        },
+        {
+          signer_type_id: client_signer_type_id,
+          email: client_email,
+          key: key + client_signer_type_id
+        }
+      ]
     });
 
     setDocuments(documentsTemp);
   };
 
-  const handleDelete = key => {
+  const handleDelete = (document_key, signer_key = null) => {
     let arr = [].concat(documents);
-    let found = documents.findIndex(s => {
-      return s.key === key;
+    let document_index = documents.findIndex(document => {
+      return document.key === document_key;
     });
 
-    if (
-      arr[found].id === "" ||
-      typeof arr[found].id === "undefined" ||
-      arr[found].id === undefined
-    )
-      arr.splice(found, 1);
-    else arr[found]["_destroy"] = true;
+    if (signer_key === null) {
+      if (
+        arr[document_index].id === "" ||
+        typeof arr[document_index].id === "undefined" ||
+        arr[document_index].id === undefined
+      )
+        arr.splice(document_index, 1);
+      else arr[document_index]["_destroy"] = true;
+    } else {
+      let signer_index = arr[document_index]["signers_attributes"].findIndex(
+        signer => {
+          return signer.key === signer_key;
+        }
+      );
+      if (
+        arr[document_index]["signers_attributes"][signer_index].id === "" ||
+        typeof arr[document_index]["signers_attributes"][signer_index].id ===
+          "undefined" ||
+        arr[document_index]["signers_attributes"][signer_index].id === undefined
+      )
+        arr[document_index]["signers_attributes"].splice(signer_index, 1);
+      else
+        arr[document_index]["signers_attributes"][signer_index][
+          "_destroy"
+        ] = true;
+    }
 
     setDocuments(arr);
   };
@@ -77,7 +125,8 @@ const MultipleForm = props => {
             name={`${name}[${index}]`}
             document={document}
             document_types={document_types}
-            deleteDocument={handleDelete}
+            signer_types={signer_types}
+            deleteItem={handleDelete}
             keyUpInput={handleKeyUp}
             t={t}
           />

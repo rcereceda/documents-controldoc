@@ -1,15 +1,18 @@
 import React, { useState, memo } from "react";
 import DocumentTypeSelect from "./document_type_select.jsx";
 import DocumentValueInput from "./document_value_input.jsx";
+import SignerForm from "./signer_form.jsx";
 import PropTypes from "prop-types";
+import _ from "lodash";
 
 const DocumentForm = props => {
   const {
-    deleteDocument,
+    deleteItem,
     keyUpInput,
     name,
     document,
     document_types,
+    signer_types,
     t
   } = props;
   const [document_type_id, setDocumentTypeId] = useState(
@@ -32,7 +35,7 @@ const DocumentForm = props => {
 
   const handleDelete = event => {
     event.preventDefault();
-    deleteDocument(document.key);
+    deleteItem(document.key);
   };
 
   const handleKeyUp = (key, value) => {
@@ -87,6 +90,41 @@ const DocumentForm = props => {
           />
         </button>
       );
+    }
+  };
+
+  const drawSignerForm = () => {
+    if (document.signers_attributes.length > 0) {
+      return document.signers_attributes.map((signer, index) => {
+        let signer_type = _.get(
+          _.find(signer_types, { value: signer.signer_type_id }),
+          "type"
+        );
+        let visible = "";
+        if (
+          (signer_type === "person" && document_for_client) ||
+          (signer_type === "company" && upload_required) ||
+          (signer_type === "client" && !document_for_client)
+        )
+          visible = "d-none";
+        return (
+          <div
+            className={`card bg-light mb-3 px-3 pt-3 ${visible}`}
+            key={signer.key || index}
+          >
+            <SignerForm
+              key={signer.key || index}
+              name={`${name}[signers_attributes][${index}]`}
+              document={document}
+              signer={signer}
+              signer_types={signer_types}
+              deleteItem={deleteItem}
+              handleChangeStatus={handleChangeStatus}
+              t={t}
+            />
+          </div>
+        );
+      });
     }
   };
 
@@ -201,6 +239,15 @@ const DocumentForm = props => {
                   </div>
                 </div>
               </div>
+              <div
+                className={`row ${
+                  signature_required || upload_required ? "d-flex" : "d-none"
+                }`}
+              >
+                <div className="col-md-9 flex-fill px-3">
+                  {drawSignerForm()}
+                </div>
+              </div>
             </div>
             <input
               type="hidden"
@@ -223,7 +270,7 @@ DocumentForm.propTypes = {
   document: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
-  deleteDocument: PropTypes.func.isRequired
+  deleteItem: PropTypes.func.isRequired
 };
 
 export default memo(DocumentForm);
