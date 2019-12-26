@@ -9,6 +9,7 @@ const MultipleDocuments = props => {
       <Documents
         documents={props.documents || []}
         document_types={props.document_types || []}
+        signer_types={props.signer_types || []}
         person_email={props.person_email}
         company_email={props.company_email}
         form_name={props.form_name}
