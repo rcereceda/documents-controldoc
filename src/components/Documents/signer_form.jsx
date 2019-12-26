@@ -73,7 +73,7 @@ const SignerForm = props => {
             label: t(`documents.attributes.${signer_type}_email`)
           })}
         </div>
-        <div className="col-md-6">{drawDeleteButton()}</div>
+        <div className="col-md-6" />
         <input type="hidden" name={`${name}[id]`} value={signer.id || ""} />
         <input
           type="hidden"
