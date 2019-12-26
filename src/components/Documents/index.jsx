@@ -4,11 +4,6 @@ import MultipleForm from "./multiple_form.jsx";
 
 const Documents = props => {
   const [t] = useTranslation();
-  const signer_types = [
-    { value: 2, label: "Cliente", type: "client" },
-    { value: 1, label: "Empleador", type: "company" },
-    { value: 3, label: "Trabajador", type: "person" }
-  ];
 
   if (t) {
     return (
@@ -16,7 +11,7 @@ const Documents = props => {
         <MultipleForm
           documents={props.documents}
           document_types={props.document_types}
-          signer_types={signer_types}
+          signer_types={props.signer_types}
           person_email={props.person_email}
           company_email={props.company_email}
           t={t}

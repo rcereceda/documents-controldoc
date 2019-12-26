@@ -1,6 +1,6 @@
 {
   "name": "documents-controldoc",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "",
   "author": "rcereceda",
   "license": "MIT",
@@ -16,7 +16,6 @@
     "test": "cross-env CI=1 react-scripts test --env=jsdom",
     "test:watch": "react-scripts test --env=jsdom",
     "build": "rollup -c",
-    "start": "react-scripts start",
     "prepare": "yarn run build",
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build"
