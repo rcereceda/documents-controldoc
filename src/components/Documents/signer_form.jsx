@@ -33,6 +33,7 @@ const SignerForm = props => {
       <DocumentValueInput
         type={options["type"]}
         document={document}
+        signer={signer}
         name={name}
         label={options["label"]}
         attribute={options["attribute"]}

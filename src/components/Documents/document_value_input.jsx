@@ -209,9 +209,10 @@ class DocumentValueInput extends React.Component {
   }
 
   render() {
-    let { document, attribute, valid_signature, type } = this.props;
+    let { document, signer, attribute, valid_signature, type } = this.props;
     let isCheckbox = type === "checkbox";
     let rejected = document.state === "rejected";
+    let errors = signer !== undefined ? signer.errors : document.errors;
 
     return (
       <div className="form-group row">
@@ -221,7 +222,7 @@ class DocumentValueInput extends React.Component {
           <div className={isCheckbox ? "" : "input-group"}>
             {this.drawDocumentValue()}
           </div>
-          <InputError attr={attribute} errors={document.errors} />
+          <InputError attr={attribute} errors={errors} />
         </div>
       </div>
     );
