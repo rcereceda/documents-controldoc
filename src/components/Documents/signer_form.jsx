@@ -69,7 +69,7 @@ const SignerForm = props => {
         <div className="col-md-6">
           {drawDocumentValue({
             type: "text",
-            attribute: `${signer_type}_email`,
+            attribute: "email",
             label: t(`documents.attributes.${signer_type}_email`)
           })}
         </div>
