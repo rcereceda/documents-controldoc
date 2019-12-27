@@ -159,7 +159,7 @@ const DocumentForm = props => {
     <React.Fragment>
       <div className={`row ${document._destroy ? "d-none" : ""}`}>
         <div className="col-sm-12">
-          <div className="card hover-card mb-3">
+          <div className="card mb-3">
             <div className="float-right">{drawDeleteButton()}</div>
             <div className="card-body pt-0">
               <div className="row d-flex">

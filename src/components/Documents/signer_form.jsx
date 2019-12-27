@@ -77,6 +77,11 @@ const SignerForm = props => {
         <input type="hidden" name={`${name}[id]`} value={signer.id || ""} />
         <input
           type="hidden"
+          name={`${name}[signer_type_id]`}
+          value={signer.signer_type_id}
+        />
+        <input
+          type="hidden"
           name={`${name}[_destroy]`}
           value={signer._destroy || false}
         />
