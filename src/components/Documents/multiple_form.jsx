@@ -21,18 +21,6 @@ const MultipleForm = props => {
     event.preventDefault();
     const key = Math.floor(Math.random() * 1000000000000);
     let documentsTemp = [...documents];
-    let person_signer_type_id = _.get(
-      _.find(signer_types, { type: "person" }),
-      "value"
-    );
-    let company_signer_type_id = _.get(
-      _.find(signer_types, { type: "company" }),
-      "value"
-    );
-    let client_signer_type_id = _.get(
-      _.find(signer_types, { type: "client" }),
-      "value"
-    );
 
     documentsTemp.push({
       id: "",
@@ -44,23 +32,7 @@ const MultipleForm = props => {
       person_email: person_email,
       client_email: client_email,
       key: key,
-      signers_attributes: [
-        {
-          signer_type_id: person_signer_type_id,
-          email: person_email,
-          key: key + person_signer_type_id
-        },
-        {
-          signer_type_id: company_signer_type_id,
-          email: company_email,
-          key: key + company_signer_type_id
-        },
-        {
-          signer_type_id: client_signer_type_id,
-          email: client_email,
-          key: key + client_signer_type_id
-        }
-      ]
+      signers_attributes: []
     });
 
     setDocuments(documentsTemp);
@@ -116,6 +88,87 @@ const MultipleForm = props => {
     setDocuments(documentsTemp);
   };
 
+  const handleSignatureRequired = (
+    document_key,
+    document_for_client,
+    value
+  ) => {
+    let documentsTemp = [...documents];
+    let document_index = documents.findIndex(document => {
+      return document.key === document_key;
+    });
+    let person_signer_type_id = _.get(
+      _.find(signer_types, { type: "person" }),
+      "value"
+    );
+    let company_signer_type_id = _.get(
+      _.find(signer_types, { type: "company" }),
+      "value"
+    );
+    let client_signer_type_id = _.get(
+      _.find(signer_types, { type: "client" }),
+      "value"
+    );
+
+    if (value) {
+      let person_signer = {
+        signer_type_id: person_signer_type_id,
+        email: person_email,
+        key: document_key + person_signer_type_id
+      };
+      let company_signer = {
+        signer_type_id: company_signer_type_id,
+        email: company_email,
+        key: document_key + company_signer_type_id
+      };
+      let client_signer = {
+        signer_type_id: client_signer_type_id,
+        email: client_email,
+        key: document_key + client_signer_type_id
+      };
+      if (document_for_client) {
+        documentsTemp[document_index]["signers_attributes"] = [
+          company_signer,
+          client_signer
+        ];
+      } else {
+        documentsTemp[document_index]["signers_attributes"] = [
+          person_signer,
+          company_signer
+        ];
+      }
+    } else {
+      documentsTemp[document_index]["signers_attributes"] = [];
+    }
+
+    setDocuments(documentsTemp);
+  };
+
+  const handleUploadRequired = (document_key, value) => {
+    let documentsTemp = [...documents];
+    let document_index = documents.findIndex(document => {
+      return document.key === document_key;
+    });
+    let person_signer_type_id = _.get(
+      _.find(signer_types, { type: "person" }),
+      "value"
+    );
+
+    if (value) {
+      documentsTemp[document_index]["signers_attributes"] = [
+        {
+          signer_type_id: person_signer_type_id,
+          email: person_email,
+          key: document_key + person_signer_type_id
+        }
+      ];
+    } else {
+      documentsTemp[document_index]["signers_attributes"] = [];
+    }
+
+    setDocuments(documentsTemp);
+  };
+
   const drawDocumentForm = () => {
     if (documents.length > 0) {
       return documents.map((document, index) => {
@@ -128,6 +181,8 @@ const MultipleForm = props => {
             signer_types={signer_types}
             deleteItem={handleDelete}
             keyUpInput={handleKeyUp}
+            handleSignatureRequired={handleSignatureRequired}
+            handleUploadRequired={handleUploadRequired}
             t={t}
           />
         );

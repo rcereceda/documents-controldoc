@@ -9,6 +9,8 @@ const DocumentForm = props => {
   const {
     deleteItem,
     keyUpInput,
+    handleSignatureRequired,
+    handleUploadRequired,
     name,
     document,
     document_types,
@@ -96,20 +98,9 @@ const DocumentForm = props => {
   const drawSignerForm = () => {
     if (document.signers_attributes.length > 0) {
       return document.signers_attributes.map((signer, index) => {
-        let signer_type = _.get(
-          _.find(signer_types, { value: signer.signer_type_id }),
-          "type"
-        );
-        let visible = "";
-        if (
-          (signer_type === "person" && document_for_client) ||
-          (signer_type === "company" && upload_required) ||
-          (signer_type === "client" && !document_for_client)
-        )
-          visible = "d-none";
         return (
           <div
-            className={`card bg-light mb-3 px-3 pt-3 ${visible}`}
+            className="card bg-light mb-3 px-3 pt-3"
             key={signer.key || index}
           >
             <SignerForm
@@ -135,10 +126,12 @@ const DocumentForm = props => {
         break;
       case "signature_required":
         setSignatureRequired(value);
+        handleSignatureRequired(document.key, document_for_client, value);
         if (value && upload_required) setUploadRequired(!value);
         break;
       case "upload_required":
         setUploadRequired(value);
+        handleUploadRequired(document.key, value);
         if (value && signature_required) setSignatureRequired(!value);
         break;
       case "person_email":
@@ -270,7 +263,9 @@ DocumentForm.propTypes = {
   document: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
-  deleteItem: PropTypes.func.isRequired
+  deleteItem: PropTypes.func.isRequired,
+  handleSignatureRequired: PropTypes.func.isRequired,
+  handleUploadRequired: PropTypes.func.isRequired
 };
 
 export default memo(DocumentForm);
