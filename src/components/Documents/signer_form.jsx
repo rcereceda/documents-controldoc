@@ -1,4 +1,4 @@
-import React, { useState, memo } from "react";
+import React, { memo } from "react";
 import DocumentValueInput from "./document_value_input.jsx";
 import PropTypes from "prop-types";
 import _ from "lodash";
@@ -36,6 +36,7 @@ const SignerForm = props => {
         name={name}
         label={options["label"]}
         attribute={options["attribute"]}
+        signer_type={options["signer_type"]}
         valid_signature={validSignature}
         handleChangeStatus={handleChangeStatus}
       />
@@ -70,6 +71,7 @@ const SignerForm = props => {
           {drawDocumentValue({
             type: "text",
             attribute: "email",
+            signer_type: signer_type,
             label: t(`documents.attributes.${signer_type}_email`)
           })}
         </div>

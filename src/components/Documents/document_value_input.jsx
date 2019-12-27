@@ -11,7 +11,8 @@ class DocumentValueInput extends React.Component {
       upload_required: props.document.upload_required,
       person_email: props.document.person_email,
       company_email: props.document.company_email,
-      client_email: props.document.client_email
+      client_email: props.document.client_email,
+      email: props.document[`${props.signer_type}_email`]
     };
     this.const_attribute = props.document[props["attribute"]];
 
@@ -33,6 +34,15 @@ class DocumentValueInput extends React.Component {
     ) {
       return {
         client_email: nextProps.document.client_email
+      };
+    } else if (
+      nextProps.attribute === "email" &&
+      nextProps.signer_type !== undefined &&
+      nextProps.signer_type !== "company" &&
+      prevState.email !== nextProps.document[`${nextProps.signer_type}_email`]
+    ) {
+      return {
+        email: nextProps.document[`${nextProps.signer_type}_email`]
       };
     }
 
@@ -181,12 +191,15 @@ class DocumentValueInput extends React.Component {
   }
 
   handleInputChange(event) {
-    const { attribute } = this.props;
+    const { attribute, signer_type, handleChangeStatus } = this.props;
     let input = event.target;
     let set_value = input.type === "checkbox" ? input.checked : input.value;
 
     this.setState({ [attribute]: set_value });
-    this.props.handleChangeStatus(attribute, set_value);
+
+    if (signer_type !== undefined)
+      handleChangeStatus(`${signer_type}_${attribute}`, set_value);
+    else handleChangeStatus(attribute, set_value);
   }
 
   handleFileChange(event) {

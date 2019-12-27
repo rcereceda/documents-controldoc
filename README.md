@@ -67,12 +67,30 @@ const document_types = [
         for_client: true
       }
     ];
+const signer_types = [
+  {
+    value: "1",
+    label: "Trabajador",
+    type: "person"
+  },
+  {
+    value: "2",
+    label: "Empleador",
+    type: "company"
+  },
+  {
+    value: "3",
+    label: "Cliente",
+    type: "client"
+  }
+];
 
 ...
 
 <MultipleForm
-      document_types={ document_types }
       documents={ props.documents }
+      document_types={ document_types }
+      signer_types={ signer_types }
       person_email={ person_email }
       company_email={ company_email }
       t={ t }
