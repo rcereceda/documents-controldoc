@@ -45,7 +45,7 @@ const SignerForm = props => {
   };
 
   const drawDeleteButton = () => {
-    if (validSignature || rejected) {
+    if (validSignature || rejected || signer_type !== "company") {
       return <div className="mb-3" />;
     } else {
       return (
@@ -76,7 +76,7 @@ const SignerForm = props => {
             label: t(`documents.attributes.${signer_type}_email`)
           })}
         </div>
-        <div className="col-md-6" />
+        <div className="col-md-6">{drawDeleteButton()}</div>
         <input type="hidden" name={`${name}[id]`} value={signer.id || ""} />
         <input
           type="hidden"

@@ -189,55 +189,6 @@ const DocumentForm = props => {
                 }`}
               >
                 <div className="col-md-9 flex-fill px-3">
-                  <div className="row">
-                    <div
-                      className={`col-md-6 ${
-                        upload_required
-                          ? ""
-                          : document_for_client
-                          ? "d-none"
-                          : ""
-                      }`}
-                    >
-                      {drawDocumentValue({
-                        type: "text",
-                        attribute: "person_email",
-                        label: t("documents.attributes.person_email")
-                      })}
-                    </div>
-                    <div
-                      className={`col-md-6 ${
-                        upload_required
-                          ? "d-none"
-                          : document_for_client
-                          ? ""
-                          : "d-none"
-                      }`}
-                    >
-                      {drawDocumentValue({
-                        type: "text",
-                        attribute: "client_email",
-                        label: t("documents.attributes.client_email")
-                      })}
-                    </div>
-                    <div
-                      className={`col-md-6 ${upload_required ? "d-none" : ""}`}
-                    >
-                      {drawDocumentValue({
-                        type: "text",
-                        attribute: "company_email",
-                        label: t("documents.attributes.company_email")
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className={`row ${
-                  signature_required || upload_required ? "d-flex" : "d-none"
-                }`}
-              >
-                <div className="col-md-9 flex-fill px-3">
                   {drawSignerForm()}
                 </div>
               </div>
