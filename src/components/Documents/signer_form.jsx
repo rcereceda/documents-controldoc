@@ -50,7 +50,7 @@ const SignerForm = props => {
     } else {
       return (
         <button
-          className="btn btn-sm btn-link text-secondary float-right"
+          className="btn btn-sm btn-link text-dark float-right"
           onClick={handleDelete}
           aria-label={t("documents.action.remove")}
           title={t("documents.action.remove")}

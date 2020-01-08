@@ -16,8 +16,8 @@ class DocumentValueInput extends React.Component {
     };
 
     this.const_attribute =
-      props.signer_type !== undefined
-        ? props.document[`${props.signer_type}_email`]
+      props.signer !== undefined
+        ? props.signer[props["attribute"]]
         : props.document[props["attribute"]];
 
     this.handleInputChange = this.handleInputChange.bind(this);
