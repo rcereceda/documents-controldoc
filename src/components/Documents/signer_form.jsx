@@ -66,30 +66,28 @@ const SignerForm = props => {
   };
 
   return (
-    <React.Fragment>
-      <div className={`row ${signer._destroy ? "d-none" : ""}`}>
-        <div className="col-md-6">
-          {drawDocumentValue({
-            type: "text",
-            attribute: "email",
-            signer_type: signer_type,
-            label: t(`documents.attributes.${signer_type}_email`)
-          })}
-        </div>
-        <div className="col-md-6">{drawDeleteButton()}</div>
-        <input type="hidden" name={`${name}[id]`} value={signer.id || ""} />
-        <input
-          type="hidden"
-          name={`${name}[signer_type_id]`}
-          value={signer.signer_type_id}
-        />
-        <input
-          type="hidden"
-          name={`${name}[_destroy]`}
-          value={signer._destroy || false}
-        />
+    <div className="row">
+      <div className="col-md-6">
+        {drawDocumentValue({
+          type: "text",
+          attribute: "email",
+          signer_type: signer_type,
+          label: t(`documents.attributes.${signer_type}_email`)
+        })}
       </div>
-    </React.Fragment>
+      <div className="col-md-6">{drawDeleteButton()}</div>
+      <input type="hidden" name={`${name}[id]`} value={signer.id || ""} />
+      <input
+        type="hidden"
+        name={`${name}[signer_type_id]`}
+        value={signer.signer_type_id}
+      />
+      <input
+        type="hidden"
+        name={`${name}[_destroy]`}
+        value={signer._destroy || false}
+      />
+    </div>
   );
 };
 

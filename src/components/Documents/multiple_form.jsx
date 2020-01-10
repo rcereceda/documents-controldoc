@@ -13,6 +13,10 @@ const MultipleForm = props => {
     documentsTemp.forEach(document => {
       const key = Math.floor(Math.random() * 1000000000000);
       if (!document.hasOwnProperty("key")) document["key"] = key;
+      document.signers_attributes.forEach(signer => {
+        const signer_key = document.key + signer.signer_type_id;
+        if (!signer.hasOwnProperty("key")) signer["key"] = signer_key;
+      });
     });
     setDocuments(documentsTemp);
   }, []);
@@ -43,7 +47,6 @@ const MultipleForm = props => {
     let document_index = documents.findIndex(document => {
       return document.key === document_key;
     });
-
     if (signer_key === null) {
       if (
         arr[document_index].id === "" ||
@@ -109,36 +112,74 @@ const MultipleForm = props => {
       _.find(signer_types, { type: "client" }),
       "value"
     );
-
+    let person_signer = {
+      signer_type_id: person_signer_type_id,
+      email: person_email,
+      key: document_key + person_signer_type_id
+    };
+    let company_signer = {
+      signer_type_id: company_signer_type_id,
+      email: company_email,
+      key: document_key + company_signer_type_id
+    };
+    let client_signer = {
+      signer_type_id: client_signer_type_id,
+      email: client_email,
+      key: document_key + client_signer_type_id
+    };
     if (value) {
-      let person_signer = {
-        signer_type_id: person_signer_type_id,
-        email: person_email,
-        key: document_key + person_signer_type_id
-      };
-      let company_signer = {
-        signer_type_id: company_signer_type_id,
-        email: company_email,
-        key: document_key + company_signer_type_id
-      };
-      let client_signer = {
-        signer_type_id: client_signer_type_id,
-        email: client_email,
-        key: document_key + client_signer_type_id
-      };
-      if (document_for_client) {
-        documentsTemp[document_index]["signers_attributes"] = [
-          company_signer,
-          client_signer
-        ];
+      _.remove(documentsTemp[document_index]["signers_attributes"], function(
+        signer
+      ) {
+        return (
+          signer.id === "" ||
+          typeof signer.id === "undefined" ||
+          signer.id === undefined
+        );
+      });
+
+      if (documentsTemp[document_index]["signers_attributes"].length > 0) {
+        documentsTemp[document_index]["signers_attributes"].forEach(signer => {
+          delete signer["_destroy"];
+        });
+        if (documentsTemp[document_index]["signers_attributes"].length === 1) {
+          documentsTemp[document_index]["signers_attributes"].push(
+            company_signer
+          );
+          documentsTemp[document_index]["company_email"] = company_signer.email;
+        }
       } else {
-        documentsTemp[document_index]["signers_attributes"] = [
-          person_signer,
-          company_signer
-        ];
+        documentsTemp[document_index]["company_email"] = company_signer.email;
+        if (document_for_client) {
+          documentsTemp[document_index]["signers_attributes"] = [
+            company_signer,
+            client_signer
+          ];
+          documentsTemp[document_index]["client_email"] = client_signer.email;
+        } else {
+          documentsTemp[document_index]["signers_attributes"] = [
+            person_signer,
+            company_signer
+          ];
+          documentsTemp[document_index]["person_email"] = person_signer.email;
+        }
       }
     } else {
-      documentsTemp[document_index]["signers_attributes"] = [];
+      _.remove(documentsTemp[document_index]["signers_attributes"], function(
+        signer
+      ) {
+        return (
+          signer.id === "" ||
+          typeof signer.id === "undefined" ||
+          signer.id === undefined
+        );
+      });
+
+      if (documentsTemp[document_index]["signers_attributes"].length > 0) {
+        documentsTemp[document_index]["signers_attributes"].forEach(signer => {
+          signer["_destroy"] = true;
+        });
+      }
     }
 
     setDocuments(documentsTemp);
@@ -155,15 +196,49 @@ const MultipleForm = props => {
     );
 
     if (value) {
-      documentsTemp[document_index]["signers_attributes"] = [
-        {
-          signer_type_id: person_signer_type_id,
-          email: person_email,
-          key: document_key + person_signer_type_id
-        }
-      ];
+      _.remove(documentsTemp[document_index]["signers_attributes"], function(
+        signer
+      ) {
+        return (
+          signer.signer_type_id !== person_signer_type_id &&
+          (signer.id === "" ||
+            typeof signer.id === "undefined" ||
+            signer.id === undefined)
+        );
+      });
+
+      if (documentsTemp[document_index]["signers_attributes"].length > 0) {
+        documentsTemp[document_index]["signers_attributes"].forEach(signer => {
+          if (signer.signer_type_id === person_signer_type_id)
+            delete signer["_destroy"];
+          else signer["_destroy"] = true;
+        });
+      } else {
+        documentsTemp[document_index]["signers_attributes"] = [
+          {
+            signer_type_id: person_signer_type_id,
+            email: person_email,
+            key: document_key + person_signer_type_id
+          }
+        ];
+        documentsTemp[document_index]["person_email"] = person_email;
+      }
     } else {
-      documentsTemp[document_index]["signers_attributes"] = [];
+      _.remove(documentsTemp[document_index]["signers_attributes"], function(
+        signer
+      ) {
+        return (
+          signer.id === "" ||
+          typeof signer.id === "undefined" ||
+          signer.id === undefined
+        );
+      });
+
+      if (documentsTemp[document_index]["signers_attributes"].length > 0) {
+        documentsTemp[document_index]["signers_attributes"].forEach(signer => {
+          signer["_destroy"] = true;
+        });
+      }
     }
 
     setDocuments(documentsTemp);

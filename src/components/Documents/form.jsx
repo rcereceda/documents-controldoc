@@ -3,7 +3,6 @@ import DocumentTypeSelect from "./document_type_select.jsx";
 import DocumentValueInput from "./document_value_input.jsx";
 import SignerForm from "./signer_form.jsx";
 import PropTypes from "prop-types";
-import _ from "lodash";
 
 const DocumentForm = props => {
   const {
@@ -95,12 +94,14 @@ const DocumentForm = props => {
     }
   };
 
-  const drawSignerForm = () => {
+  const drawSignerForms = () => {
     if (document.signers_attributes.length > 0) {
       return document.signers_attributes.map((signer, index) => {
         return (
           <div
-            className="card bg-light mb-3 px-3 pt-3"
+            className={`card bg-light mb-3 px-3 pt-3 ${
+              signer._destroy ? "d-none" : ""
+            }`}
             key={signer.key || index}
           >
             <SignerForm
@@ -189,7 +190,7 @@ const DocumentForm = props => {
                 }`}
               >
                 <div className="col-md-9 flex-fill px-3">
-                  {drawSignerForm()}
+                  {drawSignerForms()}
                 </div>
               </div>
             </div>

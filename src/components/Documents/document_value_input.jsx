@@ -26,20 +26,6 @@ class DocumentValueInput extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (
-      nextProps.attribute === "person_email" &&
-      prevState.person_email !== nextProps.document.person_email
-    ) {
-      return {
-        person_email: nextProps.document.person_email
-      };
-    } else if (
-      nextProps.attribute === "client_email" &&
-      prevState.client_email !== nextProps.document.client_email
-    ) {
-      return {
-        client_email: nextProps.document.client_email
-      };
-    } else if (
       nextProps.attribute === "email" &&
       nextProps.signer_type !== undefined &&
       nextProps.signer_type !== "company" &&
