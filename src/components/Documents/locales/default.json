@@ -18,7 +18,8 @@
     },
     "action": {
       "add": "Agregar documento",
-      "remove": "Borrar documento"
+      "remove": "Borrar documento",
+      "add_signer": "Agregar firmante"
     }
   }
 }

@@ -37,6 +37,7 @@ const SignerForm = props => {
         name={name}
         label={options["label"]}
         attribute={options["attribute"]}
+        signer_email={options["signer_email"]}
         signer_type={options["signer_type"]}
         valid_signature={validSignature}
         handleChangeStatus={handleChangeStatus}
@@ -71,6 +72,7 @@ const SignerForm = props => {
         {drawDocumentValue({
           type: "text",
           attribute: "email",
+          signer_email: signer.email,
           signer_type: signer_type,
           label: t(`documents.attributes.${signer_type}_email`)
         })}

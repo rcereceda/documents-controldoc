@@ -43,8 +43,8 @@ const MultipleForm = props => {
   };
 
   const handleDelete = (document_key, signer_key = null) => {
-    let arr = [].concat(documents);
-    let document_index = documents.findIndex(document => {
+    let arr = [...documents];
+    let document_index = arr.findIndex(document => {
       return document.key === document_key;
     });
     if (signer_key === null) {
@@ -88,6 +88,26 @@ const MultipleForm = props => {
     if (key === "person_email") setPersonEmail(value);
     else setClientEmail(value);
 
+    setDocuments(documentsTemp);
+  };
+
+  const handleAddSigner = key => {
+    let documentsTemp = [...documents];
+    let document_index = documents.findIndex(document => {
+      return document.key === key;
+    });
+    const signer_key = Math.floor(Math.random() * 1000000000000);
+    let company_signer_type_id = _.get(
+      _.find(signer_types, { type: "company" }),
+      "value"
+    );
+    let company_signer = {
+      signer_type_id: company_signer_type_id,
+      email: "",
+      key: signer_key
+    };
+
+    documentsTemp[document_index]["signers_attributes"].push(company_signer);
     setDocuments(documentsTemp);
   };
 
@@ -256,6 +276,7 @@ const MultipleForm = props => {
             signer_types={signer_types}
             deleteItem={handleDelete}
             keyUpInput={handleKeyUp}
+            addSigner={handleAddSigner}
             handleSignatureRequired={handleSignatureRequired}
             handleUploadRequired={handleUploadRequired}
             t={t}

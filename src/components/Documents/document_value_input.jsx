@@ -12,7 +12,7 @@ class DocumentValueInput extends React.Component {
       person_email: props.document.person_email,
       company_email: props.document.company_email,
       client_email: props.document.client_email,
-      email: props.document[`${props.signer_type}_email`]
+      email: props.signer_email
     };
 
     this.const_attribute =
@@ -72,13 +72,20 @@ class DocumentValueInput extends React.Component {
           return <div>{this.const_attribute}</div>;
         } else {
           return (
-            <input
-              className="form-control"
-              type={type}
-              value={state_attribute || ""}
-              name={`${name}[${attribute}]`}
-              onChange={this.handleInputChange}
-            />
+            <div className="input-group mb-3">
+              <div className="input-group-prepend">
+                <span className="input-group-text" id="addon">
+                  <i className="far fa-envelope" />
+                </span>
+              </div>
+              <input
+                className="form-control"
+                type={type}
+                value={state_attribute || ""}
+                name={`${name}[${attribute}]`}
+                onChange={this.handleInputChange}
+              />
+            </div>
           );
         }
       case "checkbox":

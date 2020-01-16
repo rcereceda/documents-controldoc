@@ -18,7 +18,8 @@
     },
     "action": {
       "add": "Add document",
-      "remove": "Remove document"
+      "remove": "Remove document",
+      "add_signer": "Add signer"
     }
   }
 }

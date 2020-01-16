@@ -8,6 +8,7 @@ const DocumentForm = props => {
   const {
     deleteItem,
     keyUpInput,
+    addSigner,
     handleSignatureRequired,
     handleUploadRequired,
     name,
@@ -41,6 +42,11 @@ const DocumentForm = props => {
 
   const handleKeyUp = (key, value) => {
     keyUpInput(key, value);
+  };
+
+  const handleAddSigner = event => {
+    event.preventDefault();
+    addSigner(document.key);
   };
 
   const drawDocumentType = () => {
@@ -89,6 +95,21 @@ const DocumentForm = props => {
             className="fa fas fa-trash h6"
             alt={t("documents.action.remove")}
           />
+        </button>
+      );
+    }
+  };
+
+  const renderAddButton = () => {
+    if (signature_required) {
+      return (
+        <button
+          className="btn btn-dark btn-sm"
+          onClick={handleAddSigner}
+          name="add_signer"
+        >
+          <i className="fas fa-user" /> &nbsp;{" "}
+          {t("documents.action.add_signer")}
         </button>
       );
     }
@@ -191,6 +212,7 @@ const DocumentForm = props => {
               >
                 <div className="col-md-9 flex-fill px-3">
                   {drawSignerForms()}
+                  {renderAddButton()}
                 </div>
               </div>
             </div>
@@ -216,6 +238,7 @@ DocumentForm.propTypes = {
   t: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   deleteItem: PropTypes.func.isRequired,
+  addSigner: PropTypes.func.isRequired,
   handleSignatureRequired: PropTypes.func.isRequired,
   handleUploadRequired: PropTypes.func.isRequired
 };
