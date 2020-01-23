@@ -101,7 +101,7 @@ const DocumentForm = props => {
   };
 
   const renderAddButton = () => {
-    if (signature_required) {
+    if (signature_required && !validSignature && !rejected) {
       return (
         <button
           className="btn btn-dark btn-sm"
