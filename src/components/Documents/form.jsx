@@ -1,8 +1,9 @@
-import React, { useState, memo } from "react";
+import React, { useState, memo, useContext } from "react";
 import DocumentTypeSelect from "./document_type_select.jsx";
 import DocumentValueInput from "./document_value_input.jsx";
 import SignerForm from "./signer_form.jsx";
 import PropTypes from "prop-types";
+import { DocumentsContext } from "../../contexts/DocumentsContext.js";
 
 const DocumentForm = props => {
   const {
@@ -17,6 +18,9 @@ const DocumentForm = props => {
     signer_types,
     t
   } = props;
+
+  const { userCanDelete } = useContext(DocumentsContext);
+
   const [document_type_id, setDocumentTypeId] = useState(
     document.document_type_id
   );
@@ -80,9 +84,7 @@ const DocumentForm = props => {
   };
 
   const drawDeleteButton = () => {
-    if (validSignature || rejected) {
-      return <div className="mb-3" />;
-    } else {
+    if (userCanDelete) {
       return (
         <button
           className="btn btn-sm btn-link text-danger float-right"
@@ -97,6 +99,8 @@ const DocumentForm = props => {
           />
         </button>
       );
+    } else {
+      return <div className="mb-3" />;
     }
   };
 
