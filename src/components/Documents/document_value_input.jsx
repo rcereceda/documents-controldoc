@@ -12,7 +12,7 @@ class DocumentValueInput extends React.Component {
       person_email: props.document.person_email,
       company_email: props.document.company_email,
       client_email: props.document.client_email,
-      email: props.signer_email
+      email: props.signer_email,
     };
 
     this.const_attribute =
@@ -32,7 +32,7 @@ class DocumentValueInput extends React.Component {
       prevState.email !== nextProps.document[`${nextProps.signer_type}_email`]
     ) {
       return {
-        email: nextProps.document[`${nextProps.signer_type}_email`]
+        email: nextProps.document[`${nextProps.signer_type}_email`],
       };
     }
 
@@ -45,18 +45,14 @@ class DocumentValueInput extends React.Component {
       attribute,
       document,
       name,
-      valid_signature,
       upload_required,
-      signature_required
+      signature_required,
     } = this.props;
     let state_attribute = this.state[attribute];
-    let rejected = document.state === "rejected";
 
     switch (type) {
       case "file":
-        if (valid_signature || rejected) {
-          return this.drawFileLink();
-        } else {
+        if (document.is_editable) {
           return (
             <input
               id={attribute}
@@ -66,11 +62,11 @@ class DocumentValueInput extends React.Component {
               onChange={this.handleFileChange}
             />
           );
+        } else {
+          return this.drawFileLink();
         }
       case "text":
-        if (valid_signature || rejected) {
-          return <div>{this.const_attribute}</div>;
-        } else {
+        if (document.is_editable) {
           return (
             <div className="input-group mb-3">
               <div className="input-group-prepend">
@@ -87,19 +83,13 @@ class DocumentValueInput extends React.Component {
               />
             </div>
           );
+        } else {
+          return <div>{this.const_attribute}</div>;
         }
       case "checkbox":
         switch (attribute) {
           case "signature_required":
-            if (valid_signature || rejected) {
-              return (
-                <span
-                  className={`badge badge-pill ml-1 badge-${document.label.style}`}
-                >
-                  {document.label.text}
-                </span>
-              );
-            } else {
+            if (document.is_editable) {
               return (
                 <div className="custom-control custom-switch">
                   <input
@@ -118,9 +108,17 @@ class DocumentValueInput extends React.Component {
                   </label>
                 </div>
               );
+            } else {
+              return (
+                <span
+                  className={`badge badge-pill ml-1 badge-${document.label.style}`}
+                >
+                  {document.label.text}
+                </span>
+              );
             }
           case "upload_required":
-            if (!valid_signature && !rejected) {
+            if (document.is_editable) {
               return (
                 <div className="custom-control custom-switch">
                   <input

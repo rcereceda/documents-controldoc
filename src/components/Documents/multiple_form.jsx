@@ -2,7 +2,7 @@ import React, { useState, useEffect, memo } from "react";
 import DocumentForm from "./form.jsx";
 import _ from "lodash";
 
-const MultipleForm = props => {
+const MultipleForm = (props) => {
   const { t, name, document_types, signer_types, company_email } = props;
   const [documents, setDocuments] = useState([]);
   const [person_email, setPersonEmail] = useState(props.person_email);
@@ -10,10 +10,10 @@ const MultipleForm = props => {
 
   useEffect(() => {
     let documentsTemp = [...props.documents];
-    documentsTemp.forEach(document => {
+    documentsTemp.forEach((document) => {
       const key = Math.floor(Math.random() * 1000000000000);
       if (!document.hasOwnProperty("key")) document["key"] = key;
-      document.signers_attributes.forEach(signer => {
+      document.signers_attributes.forEach((signer) => {
         const signer_key = document.key + signer.signer_type_id;
         if (!signer.hasOwnProperty("key")) signer["key"] = signer_key;
       });
@@ -21,7 +21,7 @@ const MultipleForm = props => {
     setDocuments(documentsTemp);
   }, []);
 
-  const handleClick = event => {
+  const handleClick = (event) => {
     event.preventDefault();
     const key = Math.floor(Math.random() * 1000000000000);
     let documentsTemp = [...documents];
@@ -36,7 +36,9 @@ const MultipleForm = props => {
       person_email: person_email,
       client_email: client_email,
       key: key,
-      signers_attributes: []
+      signers_attributes: [],
+      is_editable: true,
+      can_delete: true,
     });
 
     setDocuments(documentsTemp);
@@ -44,7 +46,7 @@ const MultipleForm = props => {
 
   const handleDelete = (document_key, signer_key = null) => {
     let arr = [...documents];
-    let document_index = arr.findIndex(document => {
+    let document_index = arr.findIndex((document) => {
       return document.key === document_key;
     });
     if (signer_key === null) {
@@ -57,7 +59,7 @@ const MultipleForm = props => {
       else arr[document_index]["_destroy"] = true;
     } else {
       let signer_index = arr[document_index]["signers_attributes"].findIndex(
-        signer => {
+        (signer) => {
           return signer.key === signer_key;
         }
       );
@@ -80,7 +82,7 @@ const MultipleForm = props => {
   const handleKeyUp = (key, value) => {
     let documentsTemp = [...documents];
 
-    documentsTemp = _.map(documentsTemp, function(document) {
+    documentsTemp = _.map(documentsTemp, function (document) {
       document[key] = value;
       return document;
     });
@@ -91,9 +93,9 @@ const MultipleForm = props => {
     setDocuments(documentsTemp);
   };
 
-  const handleAddSigner = key => {
+  const handleAddSigner = (key) => {
     let documentsTemp = [...documents];
-    let document_index = documents.findIndex(document => {
+    let document_index = documents.findIndex((document) => {
       return document.key === key;
     });
     const signer_key = Math.floor(Math.random() * 1000000000000);
@@ -104,7 +106,7 @@ const MultipleForm = props => {
     let company_signer = {
       signer_type_id: company_signer_type_id,
       email: "",
-      key: signer_key
+      key: signer_key,
     };
 
     documentsTemp[document_index]["signers_attributes"].push(company_signer);
@@ -117,7 +119,7 @@ const MultipleForm = props => {
     value
   ) => {
     let documentsTemp = [...documents];
-    let document_index = documents.findIndex(document => {
+    let document_index = documents.findIndex((document) => {
       return document.key === document_key;
     });
     let person_signer_type_id = _.get(
@@ -135,20 +137,20 @@ const MultipleForm = props => {
     let person_signer = {
       signer_type_id: person_signer_type_id,
       email: person_email,
-      key: document_key + person_signer_type_id
+      key: document_key + person_signer_type_id,
     };
     let company_signer = {
       signer_type_id: company_signer_type_id,
       email: company_email,
-      key: document_key + company_signer_type_id
+      key: document_key + company_signer_type_id,
     };
     let client_signer = {
       signer_type_id: client_signer_type_id,
       email: client_email,
-      key: document_key + client_signer_type_id
+      key: document_key + client_signer_type_id,
     };
     if (value) {
-      _.remove(documentsTemp[document_index]["signers_attributes"], function(
+      _.remove(documentsTemp[document_index]["signers_attributes"], function (
         signer
       ) {
         return (
@@ -159,9 +161,11 @@ const MultipleForm = props => {
       });
 
       if (documentsTemp[document_index]["signers_attributes"].length > 0) {
-        documentsTemp[document_index]["signers_attributes"].forEach(signer => {
-          delete signer["_destroy"];
-        });
+        documentsTemp[document_index]["signers_attributes"].forEach(
+          (signer) => {
+            delete signer["_destroy"];
+          }
+        );
         if (documentsTemp[document_index]["signers_attributes"].length === 1) {
           documentsTemp[document_index]["signers_attributes"].push(
             company_signer
@@ -173,19 +177,19 @@ const MultipleForm = props => {
         if (document_for_client) {
           documentsTemp[document_index]["signers_attributes"] = [
             company_signer,
-            client_signer
+            client_signer,
           ];
           documentsTemp[document_index]["client_email"] = client_signer.email;
         } else {
           documentsTemp[document_index]["signers_attributes"] = [
             person_signer,
-            company_signer
+            company_signer,
           ];
           documentsTemp[document_index]["person_email"] = person_signer.email;
         }
       }
     } else {
-      _.remove(documentsTemp[document_index]["signers_attributes"], function(
+      _.remove(documentsTemp[document_index]["signers_attributes"], function (
         signer
       ) {
         return (
@@ -196,9 +200,11 @@ const MultipleForm = props => {
       });
 
       if (documentsTemp[document_index]["signers_attributes"].length > 0) {
-        documentsTemp[document_index]["signers_attributes"].forEach(signer => {
-          signer["_destroy"] = true;
-        });
+        documentsTemp[document_index]["signers_attributes"].forEach(
+          (signer) => {
+            signer["_destroy"] = true;
+          }
+        );
       }
     }
 
@@ -207,7 +213,7 @@ const MultipleForm = props => {
 
   const handleUploadRequired = (document_key, value) => {
     let documentsTemp = [...documents];
-    let document_index = documents.findIndex(document => {
+    let document_index = documents.findIndex((document) => {
       return document.key === document_key;
     });
     let person_signer_type_id = _.get(
@@ -216,7 +222,7 @@ const MultipleForm = props => {
     );
 
     if (value) {
-      _.remove(documentsTemp[document_index]["signers_attributes"], function(
+      _.remove(documentsTemp[document_index]["signers_attributes"], function (
         signer
       ) {
         return (
@@ -228,23 +234,25 @@ const MultipleForm = props => {
       });
 
       if (documentsTemp[document_index]["signers_attributes"].length > 0) {
-        documentsTemp[document_index]["signers_attributes"].forEach(signer => {
-          if (signer.signer_type_id === person_signer_type_id)
-            delete signer["_destroy"];
-          else signer["_destroy"] = true;
-        });
+        documentsTemp[document_index]["signers_attributes"].forEach(
+          (signer) => {
+            if (signer.signer_type_id === person_signer_type_id)
+              delete signer["_destroy"];
+            else signer["_destroy"] = true;
+          }
+        );
       } else {
         documentsTemp[document_index]["signers_attributes"] = [
           {
             signer_type_id: person_signer_type_id,
             email: person_email,
-            key: document_key + person_signer_type_id
-          }
+            key: document_key + person_signer_type_id,
+          },
         ];
         documentsTemp[document_index]["person_email"] = person_email;
       }
     } else {
-      _.remove(documentsTemp[document_index]["signers_attributes"], function(
+      _.remove(documentsTemp[document_index]["signers_attributes"], function (
         signer
       ) {
         return (
@@ -255,9 +263,11 @@ const MultipleForm = props => {
       });
 
       if (documentsTemp[document_index]["signers_attributes"].length > 0) {
-        documentsTemp[document_index]["signers_attributes"].forEach(signer => {
-          signer["_destroy"] = true;
-        });
+        documentsTemp[document_index]["signers_attributes"].forEach(
+          (signer) => {
+            signer["_destroy"] = true;
+          }
+        );
       }
     }
 
