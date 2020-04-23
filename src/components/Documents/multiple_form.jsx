@@ -36,7 +36,9 @@ const MultipleForm = props => {
       person_email: person_email,
       client_email: client_email,
       key: key,
-      signers_attributes: []
+      signers_attributes: [],
+      is_editable: true,
+      can_delete: true
     });
 
     setDocuments(documentsTemp);

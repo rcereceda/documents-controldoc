@@ -1,9 +1,8 @@
-import React, { useState, memo, useContext } from "react";
+import React, { useState, memo } from "react";
 import DocumentTypeSelect from "./document_type_select.jsx";
 import DocumentValueInput from "./document_value_input.jsx";
 import SignerForm from "./signer_form.jsx";
 import PropTypes from "prop-types";
-import { DocumentsContext } from "../../contexts/DocumentsContext.js";
 
 const DocumentForm = props => {
   const {
@@ -19,8 +18,6 @@ const DocumentForm = props => {
     t
   } = props;
 
-  const { userCanDelete } = useContext(DocumentsContext);
-
   const [document_type_id, setDocumentTypeId] = useState(
     document.document_type_id
   );
@@ -33,11 +30,6 @@ const DocumentForm = props => {
   const [upload_required, setUploadRequired] = useState(
     document.upload_required
   );
-  const validSignature =
-    document.valid_person_signature ||
-    document.valid_company_signature ||
-    document.valid_client_signature;
-  const rejected = document.state === "rejected";
 
   const handleDelete = event => {
     event.preventDefault();
@@ -60,7 +52,6 @@ const DocumentForm = props => {
         document={document}
         options={document_types}
         name={name}
-        valid_signature={validSignature}
         handleChangeStatus={handleChangeStatus}
         t={t}
       />
@@ -75,7 +66,6 @@ const DocumentForm = props => {
         name={name}
         label={options["label"]}
         attribute={options["attribute"]}
-        valid_signature={validSignature}
         signature_required={signature_required}
         upload_required={upload_required}
         handleChangeStatus={handleChangeStatus}
@@ -84,7 +74,7 @@ const DocumentForm = props => {
   };
 
   const drawDeleteButton = () => {
-    if (userCanDelete) {
+    if (document.can_delete) {
       return (
         <button
           className="btn btn-sm btn-link text-danger float-right"
@@ -105,7 +95,7 @@ const DocumentForm = props => {
   };
 
   const renderAddButton = () => {
-    if (signature_required && !validSignature && !rejected) {
+    if (signature_required && document.is_editable) {
       return (
         <button
           className="btn btn-dark btn-sm"
