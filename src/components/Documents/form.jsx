@@ -4,7 +4,7 @@ import DocumentValueInput from "./document_value_input.jsx";
 import SignerForm from "./signer_form.jsx";
 import PropTypes from "prop-types";
 
-const DocumentForm = (props) => {
+const DocumentForm = props => {
   const {
     deleteItem,
     keyUpInput,
@@ -15,7 +15,7 @@ const DocumentForm = (props) => {
     document,
     document_types,
     signer_types,
-    t,
+    t
   } = props;
 
   const [document_type_id, setDocumentTypeId] = useState(
@@ -31,7 +31,7 @@ const DocumentForm = (props) => {
     document.upload_required
   );
 
-  const handleDelete = (event) => {
+  const handleDelete = event => {
     event.preventDefault();
     deleteItem(document.key);
   };
@@ -40,7 +40,7 @@ const DocumentForm = (props) => {
     keyUpInput(key, value);
   };
 
-  const handleAddSigner = (event) => {
+  const handleAddSigner = event => {
     event.preventDefault();
     addSigner(document.key);
   };
@@ -58,7 +58,7 @@ const DocumentForm = (props) => {
     );
   };
 
-  const drawDocumentValue = (options) => {
+  const drawDocumentValue = options => {
     return (
       <DocumentValueInput
         type={options["type"]}
@@ -181,7 +181,7 @@ const DocumentForm = (props) => {
                       {drawDocumentValue({
                         type: "file",
                         attribute: "file",
-                        label: t("documents.attributes.file"),
+                        label: t("documents.attributes.file")
                       })}
                     </div>
                   </div>
@@ -190,12 +190,12 @@ const DocumentForm = (props) => {
                   {drawDocumentValue({
                     type: "checkbox",
                     attribute: "signature_required",
-                    label: t("documents.attributes.signature_required"),
+                    label: t("documents.attributes.signature_required")
                   })}
                   {drawDocumentValue({
                     type: "checkbox",
                     attribute: "upload_required",
-                    label: t("documents.attributes.upload_required"),
+                    label: t("documents.attributes.upload_required")
                   })}
                 </div>
               </div>
@@ -234,7 +234,7 @@ DocumentForm.propTypes = {
   deleteItem: PropTypes.func.isRequired,
   addSigner: PropTypes.func.isRequired,
   handleSignatureRequired: PropTypes.func.isRequired,
-  handleUploadRequired: PropTypes.func.isRequired,
+  handleUploadRequired: PropTypes.func.isRequired
 };
 
 export default memo(DocumentForm);

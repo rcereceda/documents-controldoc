@@ -12,7 +12,7 @@ class DocumentValueInput extends React.Component {
       person_email: props.document.person_email,
       company_email: props.document.company_email,
       client_email: props.document.client_email,
-      email: props.signer_email,
+      email: props.signer_email
     };
 
     this.const_attribute =
@@ -32,7 +32,7 @@ class DocumentValueInput extends React.Component {
       prevState.email !== nextProps.document[`${nextProps.signer_type}_email`]
     ) {
       return {
-        email: nextProps.document[`${nextProps.signer_type}_email`],
+        email: nextProps.document[`${nextProps.signer_type}_email`]
       };
     }
 
@@ -46,7 +46,7 @@ class DocumentValueInput extends React.Component {
       document,
       name,
       upload_required,
-      signature_required,
+      signature_required
     } = this.props;
     let state_attribute = this.state[attribute];
 
