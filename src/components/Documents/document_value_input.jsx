@@ -63,7 +63,7 @@ class DocumentValueInput extends React.Component {
             />
           );
         } else {
-          return null;
+          return this.drawFileLink();
         }
       case "text":
         if (document.is_editable) {
@@ -213,7 +213,7 @@ class DocumentValueInput extends React.Component {
       <div className="form-group row">
         <div className="flex-fill px-3">
           {isCheckbox ? "" : this.drawLabel()}
-          {valid_signature || rejected ? "" : this.drawFileLink()}
+          {document.is_editable ? this.drawFileLink() : ""}
           <div className={isCheckbox ? "" : "input-group"}>
             {this.drawDocumentValue()}
           </div>
