@@ -62,6 +62,8 @@ class DocumentValueInput extends React.Component {
               onChange={this.handleFileChange}
             />
           );
+        } else {
+          return null;
         }
       case "text":
         if (document.is_editable) {
