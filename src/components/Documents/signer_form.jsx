@@ -13,10 +13,13 @@ const SignerForm = props => {
     signer_types,
     t
   } = props;
+
   const signer_type = _.get(
     _.find(signer_types, { value: signer.signer_type_id }),
     "type"
   );
+
+  console.log(signer_type);
 
   const handleDelete = event => {
     event.preventDefault();
@@ -40,7 +43,10 @@ const SignerForm = props => {
   };
 
   const drawDeleteButton = () => {
-    if (document.is_editable) {
+    console.log(signer.signer_type_id);
+    console.log(document.is_editable);
+
+    if (document.is_editable && signer_type === "company") {
       return (
         <button
           className="btn btn-sm btn-link text-dark float-right"

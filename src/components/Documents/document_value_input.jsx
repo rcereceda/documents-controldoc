@@ -204,9 +204,8 @@ class DocumentValueInput extends React.Component {
   }
 
   render() {
-    let { document, signer, attribute, valid_signature, type } = this.props;
+    let { document, signer, attribute, type } = this.props;
     let isCheckbox = type === "checkbox";
-    let rejected = document.state === "rejected";
     let errors = signer !== undefined ? signer.errors : document.errors;
 
     return (
