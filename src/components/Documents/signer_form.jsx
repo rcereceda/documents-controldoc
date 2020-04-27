@@ -13,15 +13,13 @@ const SignerForm = props => {
     signer_types,
     t
   } = props;
-  const validSignature =
-    document.valid_person_signature ||
-    document.valid_company_signature ||
-    document.valid_client_signature;
-  const rejected = document.state === "rejected";
+
   const signer_type = _.get(
     _.find(signer_types, { value: signer.signer_type_id }),
     "type"
   );
+
+  console.log(signer_type);
 
   const handleDelete = event => {
     event.preventDefault();
@@ -39,16 +37,16 @@ const SignerForm = props => {
         attribute={options["attribute"]}
         signer_email={options["signer_email"]}
         signer_type={options["signer_type"]}
-        valid_signature={validSignature}
         handleChangeStatus={handleChangeStatus}
       />
     );
   };
 
   const drawDeleteButton = () => {
-    if (validSignature || rejected || signer_type !== "company") {
-      return <div className="mb-3" />;
-    } else {
+    console.log(signer.signer_type_id);
+    console.log(document.is_editable);
+
+    if (document.is_editable && signer_type === "company") {
       return (
         <button
           className="btn btn-sm btn-link text-dark float-right"
@@ -63,6 +61,8 @@ const SignerForm = props => {
           />
         </button>
       );
+    } else {
+      return <div className="mb-3" />;
     }
   };
 

@@ -17,6 +17,7 @@ const DocumentForm = props => {
     signer_types,
     t
   } = props;
+
   const [document_type_id, setDocumentTypeId] = useState(
     document.document_type_id
   );
@@ -29,11 +30,6 @@ const DocumentForm = props => {
   const [upload_required, setUploadRequired] = useState(
     document.upload_required
   );
-  const validSignature =
-    document.valid_person_signature ||
-    document.valid_company_signature ||
-    document.valid_client_signature;
-  const rejected = document.state === "rejected";
 
   const handleDelete = event => {
     event.preventDefault();
@@ -56,7 +52,6 @@ const DocumentForm = props => {
         document={document}
         options={document_types}
         name={name}
-        valid_signature={validSignature}
         handleChangeStatus={handleChangeStatus}
         t={t}
       />
@@ -71,7 +66,6 @@ const DocumentForm = props => {
         name={name}
         label={options["label"]}
         attribute={options["attribute"]}
-        valid_signature={validSignature}
         signature_required={signature_required}
         upload_required={upload_required}
         handleChangeStatus={handleChangeStatus}
@@ -80,9 +74,7 @@ const DocumentForm = props => {
   };
 
   const drawDeleteButton = () => {
-    if (validSignature || rejected) {
-      return <div className="mb-3" />;
-    } else {
+    if (document.can_delete) {
       return (
         <button
           className="btn btn-sm btn-link text-danger float-right"
@@ -97,11 +89,13 @@ const DocumentForm = props => {
           />
         </button>
       );
+    } else {
+      return <div className="mb-3" />;
     }
   };
 
   const renderAddButton = () => {
-    if (signature_required && !validSignature && !rejected) {
+    if (signature_required && document.is_editable) {
       return (
         <button
           className="btn btn-dark btn-sm"
