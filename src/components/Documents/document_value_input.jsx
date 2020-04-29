@@ -187,6 +187,7 @@ class DocumentValueInput extends React.Component {
 
   handleInputChange(event) {
     const { attribute, signer_type, handleChangeStatus } = this.props;
+
     let input = event.target;
     let set_value = input.type === "checkbox" ? input.checked : input.value;
 

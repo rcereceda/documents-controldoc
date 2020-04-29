@@ -14,7 +14,10 @@
       "upload_required": "¿Uploaded by employee?",
       "person_email": "Employee personal email",
       "company_email": "Employer email",
-      "client_email": "Client email"
+      "client_email": "Client email",
+      "signers": {
+        "options": "Select an option"
+      }
     },
     "action": {
       "add": "Add document",

@@ -14,7 +14,10 @@
       "upload_required": "¿Lo sube el trabajador?",
       "person_email": "Correo electrónico personal del Trabajador",
       "company_email": "Correo electrónico de quien autoriza - Empleador",
-      "client_email": "Correo electrónico del Cliente"
+      "client_email": "Correo electrónico del Cliente",
+      "signers": {
+        "options": "Seleccione un opción"
+      }
     },
     "action": {
       "add": "Agregar documento",

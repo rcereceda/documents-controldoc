@@ -1,7 +1,9 @@
-import React, { memo } from "react";
-import DocumentValueInput from "./document_value_input.jsx";
+import React, { Fragment, memo, useContext, useState } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import Select from "react-select";
+import DocumentValueInput from "./document_value_input.jsx";
+import { DocumentsContext } from "../../contexts/DocumentsContext.js";
 
 const SignerForm = props => {
   const {
@@ -14,12 +16,16 @@ const SignerForm = props => {
     t
   } = props;
 
+  const { companySigners } = useContext(DocumentsContext);
+
+  const [signerValue, setSignerValue] = useState(
+    _.find(companySigners, { value: signer.email })
+  );
+
   const signer_type = _.get(
     _.find(signer_types, { value: signer.signer_type_id }),
     "type"
   );
-
-  console.log(signer_type);
 
   const handleDelete = event => {
     event.preventDefault();
@@ -27,25 +33,41 @@ const SignerForm = props => {
   };
 
   const drawDocumentValue = options => {
-    return (
-      <DocumentValueInput
-        type={options["type"]}
-        document={document}
-        signer={signer}
-        name={name}
-        label={options["label"]}
-        attribute={options["attribute"]}
-        signer_email={options["signer_email"]}
-        signer_type={options["signer_type"]}
-        handleChangeStatus={handleChangeStatus}
-      />
-    );
+    if (signer_type === "company") {
+      return (
+        <Fragment>
+          <label className="label-bold">{options["label"]}</label>
+          <Select
+            onChange={newValue => {
+              handleChangeStatus("company_email", newValue.value);
+              setSignerValue(newValue);
+            }}
+            options={companySigners}
+            isDisabled={!document.is_editable}
+            value={signerValue}
+            name={`${name}[${options["attribute"]}]`}
+            placeholder={`-- ${t("documents.attributes.signers.options")} --`}
+          />
+        </Fragment>
+      );
+    } else {
+      return (
+        <DocumentValueInput
+          type={options["type"]}
+          document={document}
+          signer={signer}
+          name={name}
+          label={options["label"]}
+          attribute={options["attribute"]}
+          signer_email={options["signer_email"]}
+          signer_type={options["signer_type"]}
+          handleChangeStatus={handleChangeStatus}
+        />
+      );
+    }
   };
 
   const drawDeleteButton = () => {
-    console.log(signer.signer_type_id);
-    console.log(document.is_editable);
-
     if (document.is_editable && signer_type === "company") {
       return (
         <button
@@ -67,7 +89,7 @@ const SignerForm = props => {
   };
 
   return (
-    <div className="row">
+    <div className="row pb-3">
       <div className="col-md-6">
         {drawDocumentValue({
           type: "text",
