@@ -4,6 +4,7 @@ import _ from "lodash";
 import Select from "react-select";
 import DocumentValueInput from "./document_value_input.jsx";
 import { DocumentsContext } from "../../contexts/DocumentsContext.js";
+import InputError from "./error.jsx";
 
 const SignerForm = props => {
   const {
@@ -37,17 +38,22 @@ const SignerForm = props => {
       return (
         <Fragment>
           <label className="label-bold">{options["label"]}</label>
-          <Select
-            onChange={newValue => {
-              handleChangeStatus("company_email", newValue.value);
-              setSignerValue(newValue);
-            }}
-            options={companySigners}
-            isDisabled={!document.is_editable}
-            value={signerValue}
-            name={`${name}[${options["attribute"]}]`}
-            placeholder={`-- ${t("documents.attributes.signers.options")} --`}
-          />
+          {document.is_editable ? (
+            <Select
+              onChange={newValue => {
+                handleChangeStatus("company_email", newValue.value);
+                setSignerValue(newValue);
+              }}
+              options={companySigners}
+              isDisabled={!document.is_editable}
+              value={signerValue}
+              name={`${name}[${options["attribute"]}]`}
+              placeholder={`-- ${t("documents.attributes.signers.options")} --`}
+            />
+          ) : (
+            <p>{signerValue.label}</p>
+          )}
+          <InputError attr={options["attribute"]} errors={signer.errors} />
         </Fragment>
       );
     } else {
