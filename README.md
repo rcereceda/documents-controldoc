@@ -84,6 +84,20 @@ const signer_types = [
     type: "client"
   }
 ];
+const comapnySigners = [
+  {
+    value: "email1@mail.com",
+    label: "EMAIL 1 - email1@mail.com"
+  },
+  {
+    value: "email2@mail.com",
+    label: "EMAIL 2 - email2@mail.com"
+  },
+  {
+    value: "email3@mail.com",
+    label: "EMAIL 3 - email3@mail.com"
+  }
+]
 
 ...
 
@@ -95,6 +109,7 @@ const signer_types = [
       company_email={ company_email }
       t={ t }
       name={ props.form_name || "person_sending[documents_attributes]" }
+      companySigners={companySigners}
 />
 
 ```

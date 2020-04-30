@@ -14,7 +14,7 @@ const MultipleForm = props => {
       const key = Math.floor(Math.random() * 1000000000000);
       if (!document.hasOwnProperty("key")) document["key"] = key;
       document.signers_attributes.forEach(signer => {
-        const signer_key = document.key + signer.signer_type_id;
+        const signer_key = Math.floor(Math.random() * 1000000000000);
         if (!signer.hasOwnProperty("key")) signer["key"] = signer_key;
       });
     });
