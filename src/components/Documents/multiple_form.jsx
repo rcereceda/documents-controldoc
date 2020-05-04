@@ -98,6 +98,12 @@ const MultipleForm = props => {
     let document_index = documents.findIndex(document => {
       return document.key === key;
     });
+    const current_document = _.find(
+      documents,
+      document => document.key === key
+    );
+    const last_signer_order = current_document.signers_attributes.length + 1;
+
     const signer_key = Math.floor(Math.random() * 1000000000000);
     let company_signer_type_id = _.get(
       _.find(signer_types, { type: "company" }),
@@ -106,7 +112,8 @@ const MultipleForm = props => {
     let company_signer = {
       signer_type_id: company_signer_type_id,
       email: "",
-      key: signer_key
+      key: signer_key,
+      order: last_signer_order
     };
 
     documentsTemp[document_index]["signers_attributes"].push(company_signer);
@@ -137,17 +144,20 @@ const MultipleForm = props => {
     let person_signer = {
       signer_type_id: person_signer_type_id,
       email: person_email,
-      key: document_key + person_signer_type_id
+      key: document_key + person_signer_type_id,
+      order: 1
     };
     let company_signer = {
       signer_type_id: company_signer_type_id,
       email: company_email,
-      key: document_key + company_signer_type_id
+      key: document_key + company_signer_type_id,
+      order: 2
     };
     let client_signer = {
       signer_type_id: client_signer_type_id,
       email: client_email,
-      key: document_key + client_signer_type_id
+      key: document_key + client_signer_type_id,
+      order: 3
     };
     if (value) {
       _.remove(documentsTemp[document_index]["signers_attributes"], function(

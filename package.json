@@ -1,6 +1,6 @@
 {
   "name": "documents-controldoc",
-  "version": "1.0.34",
+  "version": "1.0.35-beta[]",
   "description": "",
   "author": "rcereceda",
   "license": "MIT",
@@ -59,6 +59,8 @@
   ],
   "dependencies": {
     "i18next": "^17.0.14",
+    "react-dnd": "^10.0.2",
+    "react-dnd-html5-backend": "^10.0.2",
     "react-i18next": "^10.12.4",
     "react-select": "^3.0.5",
     "rollup-plugin-json": "^4.0.0"

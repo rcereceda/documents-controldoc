@@ -46,7 +46,8 @@ class DocumentValueInput extends React.Component {
       document,
       name,
       upload_required,
-      signature_required
+      signature_required,
+      signers_order_required
     } = this.props;
     let state_attribute = this.state[attribute];
 
@@ -126,6 +127,28 @@ class DocumentValueInput extends React.Component {
                     className="custom-control-input"
                     type={type}
                     checked={upload_required || false}
+                    name={`${name}[${attribute}]`}
+                    onChange={this.handleInputChange}
+                  />
+                  <label
+                    className="custom-control-label label-bold"
+                    htmlFor={`switch_${attribute}_${document.key}`}
+                  >
+                    {this.props.label}
+                  </label>
+                </div>
+              );
+            }
+            break;
+          case "signers_order_required":
+            if (document.is_editable) {
+              return (
+                <div className="custom-control custom-switch">
+                  <input
+                    id={`switch_${attribute}_${document.key}`}
+                    className="custom-control-input"
+                    type={type}
+                    checked={signers_order_required || false}
                     name={`${name}[${attribute}]`}
                     onChange={this.handleInputChange}
                   />

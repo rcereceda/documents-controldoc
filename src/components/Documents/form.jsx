@@ -1,8 +1,11 @@
 import React, { useState, memo } from "react";
+import PropTypes from "prop-types";
+import _ from "lodash";
+import { DndProvider } from "react-dnd";
+import Backend from "react-dnd-html5-backend";
 import DocumentTypeSelect from "./document_type_select.jsx";
 import DocumentValueInput from "./document_value_input.jsx";
 import SignerForm from "./signer_form.jsx";
-import PropTypes from "prop-types";
 
 const DocumentForm = props => {
   const {
@@ -11,6 +14,7 @@ const DocumentForm = props => {
     addSigner,
     handleSignatureRequired,
     handleUploadRequired,
+    handleSignersOrderRequired,
     name,
     document,
     document_types,
@@ -29,6 +33,9 @@ const DocumentForm = props => {
   );
   const [upload_required, setUploadRequired] = useState(
     document.upload_required
+  );
+  const [signers_order_required, setSignersOrderRequired] = useState(
+    document.signers_order_required
   );
 
   const handleDelete = event => {
@@ -68,6 +75,7 @@ const DocumentForm = props => {
         attribute={options["attribute"]}
         signature_required={signature_required}
         upload_required={upload_required}
+        signers_order_required={signers_order_required}
         handleChangeStatus={handleChangeStatus}
       />
     );
@@ -111,27 +119,29 @@ const DocumentForm = props => {
 
   const drawSignerForms = () => {
     if (document.signers_attributes.length > 0) {
-      return document.signers_attributes.map((signer, index) => {
-        return (
-          <div
-            className={`card bg-light mb-3 px-3 pt-3 ${
-              signer._destroy ? "d-none" : ""
-            }`}
-            key={signer.key || index}
-          >
-            <SignerForm
+      return _.sortBy(document.signers_attributes, ["order"]).map(
+        (signer, index) => {
+          return (
+            <div
+              className={`card bg-light mb-3 px-3 pt-3 ${
+                signer._destroy ? "d-none" : ""
+              }`}
               key={signer.key || index}
-              name={`${name}[signers_attributes][${index}]`}
-              document={document}
-              signer={signer}
-              signer_types={signer_types}
-              deleteItem={deleteItem}
-              handleChangeStatus={handleChangeStatus}
-              t={t}
-            />
-          </div>
-        );
-      });
+            >
+              <SignerForm
+                key={signer.key || index}
+                name={`${name}[signers_attributes][${index}]`}
+                document={document}
+                signer={signer}
+                signer_types={signer_types}
+                deleteItem={deleteItem}
+                handleChangeStatus={handleChangeStatus}
+                t={t}
+              />
+            </div>
+          );
+        }
+      );
     }
   };
 
@@ -144,11 +154,19 @@ const DocumentForm = props => {
         setSignatureRequired(value);
         handleSignatureRequired(document.key, document_for_client, value);
         if (value && upload_required) setUploadRequired(!value);
+        if (!value) setSignersOrderRequired(value);
         break;
       case "upload_required":
         setUploadRequired(value);
         handleUploadRequired(document.key, value);
-        if (value && signature_required) setSignatureRequired(!value);
+        if (value && signature_required) {
+          setSignatureRequired(!value);
+          setSignersOrderRequired(!value);
+        }
+        break;
+      case "signers_order_required":
+        setSignersOrderRequired(value);
+        handleSignersOrderRequired(document.key, value);
         break;
       case "person_email":
         handleKeyUp(key, value);
@@ -194,6 +212,11 @@ const DocumentForm = props => {
                   })}
                   {drawDocumentValue({
                     type: "checkbox",
+                    attribute: "signers_order_required",
+                    label: t("documents.attributes.signers_order_required")
+                  })}
+                  {drawDocumentValue({
+                    type: "checkbox",
                     attribute: "upload_required",
                     label: t("documents.attributes.upload_required")
                   })}
@@ -205,7 +228,9 @@ const DocumentForm = props => {
                 }`}
               >
                 <div className="col-md-9 flex-fill px-3">
-                  {drawSignerForms()}
+                  <DndProvider backend={Backend}>
+                    {drawSignerForms()}
+                  </DndProvider>
                   {renderAddButton()}
                 </div>
               </div>
@@ -234,7 +259,8 @@ DocumentForm.propTypes = {
   deleteItem: PropTypes.func.isRequired,
   addSigner: PropTypes.func.isRequired,
   handleSignatureRequired: PropTypes.func.isRequired,
-  handleUploadRequired: PropTypes.func.isRequired
+  handleUploadRequired: PropTypes.func.isRequired,
+  handleSignersOrderRequired: PropTypes.func.isRequired
 };
 
 export default memo(DocumentForm);
