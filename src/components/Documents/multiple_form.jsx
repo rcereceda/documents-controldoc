@@ -276,6 +276,15 @@ const MultipleForm = props => {
     setDocuments(documentsTemp);
   };
 
+  const handleSignersOrderRequired = (document_key, value) => {
+    let documentsTemp = [...documents];
+    let document_index = documents.findIndex(document => {
+      return document.key === document_key;
+    });
+
+    console.log(value);
+  };
+
   const drawDocumentForm = () => {
     if (documents.length > 0) {
       return documents.map((document, index) => {
@@ -291,6 +300,7 @@ const MultipleForm = props => {
             addSigner={handleAddSigner}
             handleSignatureRequired={handleSignatureRequired}
             handleUploadRequired={handleUploadRequired}
+            handleSignersOrderRequired={handleSignersOrderRequired}
             t={t}
           />
         );
