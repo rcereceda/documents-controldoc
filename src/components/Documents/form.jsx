@@ -1,8 +1,6 @@
 import React, { useState, memo } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
-import { DndProvider } from "react-dnd";
-import Backend from "react-dnd-html5-backend";
 import DocumentTypeSelect from "./document_type_select.jsx";
 import DocumentValueInput from "./document_value_input.jsx";
 import SignerForm from "./signer_form.jsx";
@@ -228,9 +226,7 @@ const DocumentForm = props => {
                 }`}
               >
                 <div className="col-md-9 flex-fill px-3">
-                  <DndProvider backend={Backend}>
-                    {drawSignerForms()}
-                  </DndProvider>
+                  {drawSignerForms()}
                   {renderAddButton()}
                 </div>
               </div>
