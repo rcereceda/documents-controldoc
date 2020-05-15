@@ -159,7 +159,11 @@ const SignerForm = props => {
         signer._destroy ? "d-none" : ""
       }`}
       ref={ref}
-      style={document.signers_order_required ? { ...style, opacity } : {}}
+      style={
+        document.signers_order_required && document.is_editable
+          ? { ...style, opacity }
+          : {}
+      }
     >
       <div className="row pb-3">
         <div className="col-md-6">
