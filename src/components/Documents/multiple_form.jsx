@@ -1,7 +1,8 @@
-import React, { useState, useEffect, memo, useContext } from "react";
+import React, { useState, memo, useContext } from "react";
 import _ from "lodash";
+import PropTypes from "prop-types";
 import DocumentForm from "./form.jsx";
-import DocumentsContext from "../../contexts/documents/DocumentsContext.js";
+import DocumentsContext from "../../contexts/documents/DocumentsContext.jsx";
 
 const MultipleForm = props => {
   const { t } = props;
@@ -86,6 +87,11 @@ const MultipleForm = props => {
       {drawAddDocumentButton()}
     </div>
   );
+};
+
+MultipleForm.propTypes = {
+  documents: PropTypes.array.isRequired,
+  t: PropTypes.func.isRequired
 };
 
 export default memo(MultipleForm);

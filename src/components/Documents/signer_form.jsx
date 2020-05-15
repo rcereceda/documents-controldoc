@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import _ from "lodash";
 import { useDrag, useDrop } from "react-dnd";
 import Select from "react-select";
-import DocumentsContext from "../../contexts/documents/DocumentsContext.js";
+import DocumentsContext from "../../contexts/documents/DocumentsContext.jsx";
 import InputError from "./error.jsx";
 
 const style = {
@@ -122,6 +122,7 @@ const SignerForm = props => {
                   handleChangeEmail(e.target.value, options["signer_type"])
                 }
               />
+              <InputError attr={options["attribute"]} errors={signer.errors} />
             </div>
           ) : (
             <p>{signer.email}</p>
@@ -205,12 +206,14 @@ const SignerForm = props => {
   );
 };
 
-// SignerForm.propTypes = {
-//   signer: PropTypes.object.isRequired,
-//   t: PropTypes.func.isRequired,
-//   name: PropTypes.string.isRequired,
-//   deleteItem: PropTypes.func.isRequired,
-//   handleChangeStatus: PropTypes.func.isRequired
-// };
+SignerForm.propTypes = {
+  document: PropTypes.object.isRequired,
+  documentIndex: PropTypes.number.isRequired,
+  handleMoveSigner: PropTypes.func.isRequired,
+  handleRemoveSigner: PropTypes.func.isRequired,
+  signerIndex: PropTypes.number.isRequired,
+  signer: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired
+};
 
 export default memo(SignerForm);

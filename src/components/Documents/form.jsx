@@ -5,8 +5,8 @@ import { DndProvider } from "react-dnd";
 import Backend from "react-dnd-html5-backend";
 import DocumentTypeSelect from "./document_type_select.jsx";
 import DocumentValueInput from "./document_value_input.jsx";
-import DocumentsContext from "../../contexts/documents/DocumentsContext.js";
-import SignersList from "./SignersList.js";
+import DocumentsContext from "../../contexts/documents/DocumentsContext.jsx";
+import SignersList from "./SignersList.jsx";
 
 const DocumentForm = props => {
   const { t, index, handleRemoveDocument } = props;
@@ -16,11 +16,8 @@ const DocumentForm = props => {
   const {
     signature_required,
     upload_required,
-    signers_order_required,
     can_delete,
-    is_editable,
-    signers_attributes,
-    for_client
+    signers_attributes
   } = document;
 
   const handleChangeStatus = (key, value) => {
@@ -183,6 +180,13 @@ const DocumentForm = props => {
       </div>
     </div>
   );
+};
+
+DocumentForm.propTypes = {
+  index: PropTypes.number.isRequired,
+  document: PropTypes.object.isRequired,
+  handleRemoveDocument: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired
 };
 
 export default memo(DocumentForm);

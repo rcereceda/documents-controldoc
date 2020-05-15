@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import Select from "react-select";
 import InputError from "./error.jsx";
-import DocumentsContext from "../../contexts/documents/DocumentsContext.js";
+import DocumentsContext from "../../contexts/documents/DocumentsContext.jsx";
 
 const DocumentTypeSelect = props => {
   const { documentTypes, formName } = useContext(DocumentsContext);

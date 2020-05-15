@@ -1,4 +1,5 @@
 import React, { useState, useContext, useCallback, useEffect } from "react";
+import PropTypes from "prop-types";
 import update from "immutability-helper";
 import _ from "lodash";
 import SignerForm from "./signer_form";
@@ -232,6 +233,13 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
       {drawAddSignerButton()}
     </div>
   );
+};
+
+SignersList.propTypes = {
+  documentSigners: PropTypes.array.isRequired,
+  documentIndex: PropTypes.number.isRequired,
+  document: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired
 };
 
 export default SignersList;

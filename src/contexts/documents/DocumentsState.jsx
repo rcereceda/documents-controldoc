@@ -1,7 +1,10 @@
 import React, { useReducer } from "react";
-import DocumentsContext from "./DocumentsContext";
-import DocumentsReducer from "./DocumentsReducer";
-import { CHANGE_PERSON_EMAIL, CHANGE_CLIENT_EMAIL } from "../../types";
+import DocumentsContext from "./DocumentsContext.jsx";
+import DocumentsReducer from "./DocumentsReducer.jsx";
+import {
+  CHANGE_PERSON_EMAIL,
+  CHANGE_CLIENT_EMAIL
+} from "../../types/index.jsx";
 
 const DocumentsState = props => {
   const {

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
-import InputError from "./error.jsx";
 import _ from "lodash";
-import DocumentsContext from "../../contexts/documents/DocumentsContext.js";
+import InputError from "./error.jsx";
+import DocumentsContext from "../../contexts/documents/DocumentsContext.jsx";
 
 const DocumentValueInput = props => {
   const { formName } = useContext(DocumentsContext);
