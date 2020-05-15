@@ -59,6 +59,7 @@
   ],
   "dependencies": {
     "i18next": "^17.0.14",
+    "immutability-helper": "^3.0.2",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
     "react-i18next": "^10.12.4",

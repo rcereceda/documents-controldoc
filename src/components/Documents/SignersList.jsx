@@ -2,8 +2,8 @@ import React, { useState, useContext, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
 import _ from "lodash";
-import SignerForm from "./signer_form";
-import DocumentsContext from "../../contexts/documents/DocumentsContext";
+import SignerForm from "./signer_form.jsx";
+import DocumentsContext from "../../contexts/documents/DocumentsContext.jsx";
 
 const SignersList = ({ documentSigners, documentIndex, document, t }) => {
   const {
@@ -155,10 +155,7 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
       const dragSigner = signers[dragIndex];
       setSigners(
         update(signers, {
-          $splice: [
-            [dragIndex, 1],
-            [hoverIndex, 0, dragSigner]
-          ]
+          $splice: [[dragIndex, 1], [hoverIndex, 0, dragSigner]]
         })
       );
     },

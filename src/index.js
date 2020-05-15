@@ -1,8 +1,8 @@
 import React from "react";
-import Documents from "./components/Documents/index.jsx";
 import { I18nextProvider, useTranslation } from "react-i18next";
 import i18n from "./i18n/index.js";
-import DocumentsState from "./contexts/documents/DocumentsState";
+import Documents from "./components/Documents/index.jsx";
+import DocumentsState from "./contexts/documents/DocumentsState.jsx";
 
 const MultipleDocuments = props => {
   const {
