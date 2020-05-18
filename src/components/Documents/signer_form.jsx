@@ -1,53 +1,99 @@
-import React, { Fragment, memo, useContext, useState } from "react";
+import React, { Fragment, memo, useContext, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { useDrag, useDrop } from "react-dnd";
 import Select from "react-select";
-import DocumentValueInput from "./document_value_input.jsx";
-import { DocumentsContext } from "../../contexts/DocumentsContext.js";
+import DocumentsContext from "../../contexts/documents/DocumentsContext.jsx";
 import InputError from "./error.jsx";
+
+const style = {
+  border: "1px dashed gray",
+  cursor: "move"
+};
 
 const SignerForm = props => {
   const {
-    deleteItem,
-    handleChangeStatus,
-    name,
     document,
+    documentIndex,
     signer,
-    signer_types,
-    t
+    t,
+    signerIndex,
+    signersOrderRequired,
+    handleMoveSigner,
+    handleRemoveSigner
   } = props;
 
-  const { companySigners } = useContext(DocumentsContext);
+  const {
+    companySigners,
+    signerTypes,
+    formName,
+    handleChangeEmail
+  } = useContext(DocumentsContext);
 
   const [signerValue, setSignerValue] = useState(
     _.find(companySigners, { value: signer.email })
   );
 
-  const signer_type = _.get(
-    _.find(signer_types, { value: signer.signer_type_id }),
+  // --------------------------------------------------------
+  const ref = useRef(null);
+  const [, drop] = useDrop({
+    accept: "card",
+    hover(item, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = signerIndex;
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+      const hoverBoundingRect = ref.current.getBoundingClientRect();
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const clientOffset = monitor.getClientOffset();
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+      handleMoveSigner(dragIndex, hoverIndex);
+      item.index = hoverIndex;
+    }
+  });
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: "card", id: signer.order, index: signerIndex },
+    collect: monitor => ({
+      isDragging: monitor.isDragging()
+    })
+  });
+  const opacity = isDragging ? 0 : 1;
+  drag(drop(ref));
+  // --------------------------------------------------------
+
+  const signerType = _.get(
+    _.find(signerTypes, { value: signer.signer_type_id }),
     "type"
   );
 
-  const handleDelete = event => {
-    event.preventDefault();
-    deleteItem(document.key, signer.key);
+  const handleDeleteSigner = () => {
+    handleRemoveSigner(signerIndex);
   };
 
   const drawDocumentValue = options => {
-    if (signer_type === "company") {
+    if (signerType === "company") {
       return (
         <Fragment>
           <label className="label-bold">{options["label"]}</label>
           {document.is_editable ? (
             <Select
               onChange={newValue => {
-                handleChangeStatus("company_email", newValue.value);
                 setSignerValue(newValue);
               }}
               options={companySigners}
-              isDisabled={!document.is_editable}
               value={signerValue}
-              name={`${name}[${options["attribute"]}]`}
+              name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
               placeholder={`-- ${t("documents.attributes.signers.options")} --`}
             />
           ) : (
@@ -58,27 +104,43 @@ const SignerForm = props => {
       );
     } else {
       return (
-        <DocumentValueInput
-          type={options["type"]}
-          document={document}
-          signer={signer}
-          name={name}
-          label={options["label"]}
-          attribute={options["attribute"]}
-          signer_email={options["signer_email"]}
-          signer_type={options["signer_type"]}
-          handleChangeStatus={handleChangeStatus}
-        />
+        <Fragment>
+          <label className="label-bold">{options["label"]}</label>
+          {document.is_editable ? (
+            <Fragment>
+              <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                  <span className="input-group-text" id="addon">
+                    <i className="far fa-envelope" />
+                  </span>
+                </div>
+                <input
+                  className="form-control"
+                  type="text"
+                  value={signer.email}
+                  name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
+                  onChange={e => {
+                    handleChangeEmail(e.target.value, options["signer_type"]);
+                  }}
+                />
+              </div>
+              <InputError attr={options["attribute"]} errors={signer.errors} />
+            </Fragment>
+          ) : (
+            <p>{signer.email}</p>
+          )}
+        </Fragment>
       );
     }
   };
 
-  const drawDeleteButton = () => {
-    if (document.is_editable && signer_type === "company") {
+  const drawDeleteSignerButton = () => {
+    if (document.is_editable && signerType === "company") {
       return (
         <button
+          type="button"
           className="btn btn-sm btn-link text-dark float-right"
-          onClick={handleDelete}
+          onClick={handleDeleteSigner}
           aria-label={t("documents.action.remove")}
           title={t("documents.action.remove")}
         >
@@ -95,38 +157,65 @@ const SignerForm = props => {
   };
 
   return (
-    <div className="row pb-3">
-      <div className="col-md-6">
-        {drawDocumentValue({
-          type: "text",
-          attribute: "email",
-          signer_email: signer.email,
-          signer_type: signer_type,
-          label: t(`documents.attributes.${signer_type}_email`)
-        })}
+    <div
+      className={`card bg-light mb-3 px-3 pt-3 ${
+        signer._destroy ? "d-none" : ""
+      }`}
+      ref={ref}
+      style={
+        document.signers_order_required && document.is_editable
+          ? { ...style, opacity }
+          : {}
+      }
+    >
+      <div className="row pb-3">
+        <div className="col-md-6">
+          {signersOrderRequired && (
+            <span className="text-muted">{signerIndex + 1}° Firma</span>
+          )}
+          <br />
+          {drawDocumentValue({
+            type: "text",
+            attribute: "email",
+            signer_email: signer.email,
+            signer_type: signerType,
+            label: t(`documents.attributes.${signerType}_email`)
+          })}
+        </div>
+        <div className="col-md-6">{drawDeleteSignerButton()}</div>
+        <input
+          type="hidden"
+          name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][id]`}
+          value={signer.id}
+        />
+        <input
+          type="hidden"
+          name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][order]`}
+          value={signerIndex}
+        />
+        <input
+          type="hidden"
+          name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][signer_type_id]`}
+          value={signer.signer_type_id}
+        />
+        <input
+          type="hidden"
+          name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][_destroy]`}
+          value={signer._destroy || false}
+        />
       </div>
-      <div className="col-md-6">{drawDeleteButton()}</div>
-      <input type="hidden" name={`${name}[id]`} value={signer.id || ""} />
-      <input
-        type="hidden"
-        name={`${name}[signer_type_id]`}
-        value={signer.signer_type_id}
-      />
-      <input
-        type="hidden"
-        name={`${name}[_destroy]`}
-        value={signer._destroy || false}
-      />
     </div>
   );
 };
 
 SignerForm.propTypes = {
+  document: PropTypes.object.isRequired,
+  documentIndex: PropTypes.number.isRequired,
+  handleMoveSigner: PropTypes.func.isRequired,
+  handleRemoveSigner: PropTypes.func.isRequired,
+  signerIndex: PropTypes.number.isRequired,
   signer: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
-  deleteItem: PropTypes.func.isRequired,
-  handleChangeStatus: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired
 };
 
 export default memo(SignerForm);

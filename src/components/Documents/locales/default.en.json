@@ -12,6 +12,7 @@
       "file": "File",
       "signature_required": "¿Requires signature?",
       "upload_required": "¿Uploaded by employee?",
+      "signers_order_required": "Requires a signing order?",
       "person_email": "Employee personal email",
       "company_email": "Employer email",
       "client_email": "Client email",
