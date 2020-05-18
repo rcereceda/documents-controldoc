@@ -8,7 +8,8 @@ export default (state, action) => {
     case CHANGE_PERSON_EMAIL:
       return {
         ...state,
-        personEmail: action.payload
+        personEmail: action.payload,
+        changingPersonEmail: true
       };
     case CHANGE_CLIENT_EMAIL:
       return {

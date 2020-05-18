@@ -107,23 +107,25 @@ const SignerForm = props => {
         <Fragment>
           <label className="label-bold">{options["label"]}</label>
           {document.is_editable ? (
-            <div className="input-group mb-3">
-              <div className="input-group-prepend">
-                <span className="input-group-text" id="addon">
-                  <i className="far fa-envelope" />
-                </span>
+            <Fragment>
+              <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                  <span className="input-group-text" id="addon">
+                    <i className="far fa-envelope" />
+                  </span>
+                </div>
+                <input
+                  className="form-control"
+                  type="text"
+                  value={signer.email}
+                  name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
+                  onChange={e => {
+                    handleChangeEmail(e.target.value, options["signer_type"]);
+                  }}
+                />
               </div>
-              <input
-                className="form-control"
-                type="text"
-                value={signer.email || ""}
-                name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
-                onChange={e =>
-                  handleChangeEmail(e.target.value, options["signer_type"])
-                }
-              />
               <InputError attr={options["attribute"]} errors={signer.errors} />
-            </div>
+            </Fragment>
           ) : (
             <p>{signer.email}</p>
           )}

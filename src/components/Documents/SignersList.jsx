@@ -11,7 +11,7 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
     companyEmail,
     personEmail,
     clientEmail,
-    defaultPersonEmail
+    changingPersonEmail
   } = useContext(DocumentsContext);
 
   const [signers, setSigners] = useState(documentSigners);
@@ -27,22 +27,24 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
   useEffect(() => {
     const newSigners = [...signers];
     newSigners.map(signer => {
-      if (signer.signer_type_id === getSignerTypeId("person")) {
-        signer.email =
-          signer.email.trim() === ""
-            ? defaultPersonEmail
-            : personEmail.trim() !== ""
-            ? personEmail
-            : signer.email;
+      if (
+        signer.signer_type_id === getSignerTypeId("person") &&
+        changingPersonEmail &&
+        document.is_editable
+      ) {
+        signer.email = personEmail;
       }
     });
     setSigners(newSigners);
-  }, [personEmail]);
+  }, [personEmail, changingPersonEmail]);
 
   useEffect(() => {
     const newSigners = [...signers];
     newSigners.map(signer => {
-      if (signer.signer_type_id === getSignerTypeId("client")) {
+      if (
+        signer.signer_type_id === getSignerTypeId("client") &&
+        document.is_editable
+      ) {
         signer.email = clientEmail.trim() === "" ? signer.email : clientEmail;
       }
     });
@@ -56,7 +58,7 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
   const handleChangeSignatureRequired = () => {
     const personSigner = {
       signer_type_id: getSignerTypeId("person"),
-      email: defaultPersonEmail,
+      email: personEmail,
       order: 0
     };
     const companySigner = {
@@ -155,7 +157,10 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
       const dragSigner = signers[dragIndex];
       setSigners(
         update(signers, {
-          $splice: [[dragIndex, 1], [hoverIndex, 0, dragSigner]]
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragSigner]
+          ]
         })
       );
     },

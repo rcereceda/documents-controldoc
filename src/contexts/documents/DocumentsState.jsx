@@ -14,12 +14,13 @@ const DocumentsState = props => {
     signerTypes,
     companyEmail,
     formName,
-    defaultPersonEmail
+    personEmail
   } = props;
 
   const initialState = {
-    personEmail: "",
-    clientEmail: ""
+    personEmail,
+    clientEmail: "",
+    changingPersonEmail: false
   };
 
   const [state, dispatch] = useReducer(DocumentsReducer, initialState);
@@ -38,12 +39,12 @@ const DocumentsState = props => {
       value={{
         personEmail: state.personEmail,
         clientEmail: state.clientEmail,
+        changingPersonEmail: state.changingPersonEmail,
         companySigners,
         documentTypes,
         signerTypes,
         companyEmail,
         formName,
-        defaultPersonEmail,
         handleChangeEmail
       }}
     >

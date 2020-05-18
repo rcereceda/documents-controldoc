@@ -23,7 +23,7 @@ const MultipleDocuments = props => {
       documentTypes={document_types || []}
       signerTypes={signer_types || []}
       formName={form_name || "person_sending[documents_attributes]"}
-      defaultPersonEmail={person_email}
+      personEmail={person_email}
       companyEmail={company_email}
     >
       <I18nextProvider i18n={i18n}>

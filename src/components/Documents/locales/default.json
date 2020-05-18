@@ -12,7 +12,7 @@
       "file": "Archivo",
       "signature_required": "¿Requiere firma?",
       "upload_required": "¿Lo sube el trabajador?",
-      "signers_order_required": "¿Requiere un órden de firma?",
+      "signers_order_required": "¿Requiere un orden de firma?",
       "person_email": "Correo electrónico personal del Trabajador",
       "company_email": "Correo electrónico de quien autoriza - Empleador",
       "client_email": "Correo electrónico del Cliente",
