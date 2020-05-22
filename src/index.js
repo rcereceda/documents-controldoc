@@ -12,7 +12,8 @@ const MultipleDocuments = props => {
     person_email,
     company_email,
     form_name,
-    companySigners
+    companySigners,
+    canAddDocuments
   } = props;
 
   const [t] = useTranslation();
@@ -25,6 +26,7 @@ const MultipleDocuments = props => {
       formName={form_name || "person_sending[documents_attributes]"}
       personEmail={person_email}
       companyEmail={company_email}
+      canAddDocuments={canAddDocuments}
     >
       <I18nextProvider i18n={i18n}>
         <Documents documents={documents || []} />

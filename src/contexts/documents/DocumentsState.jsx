@@ -14,7 +14,8 @@ const DocumentsState = props => {
     signerTypes,
     companyEmail,
     formName,
-    personEmail
+    personEmail,
+    canAddDocuments
   } = props;
 
   const initialState = {
@@ -41,6 +42,7 @@ const DocumentsState = props => {
         clientEmail: state.clientEmail,
         changingPersonEmail: state.changingPersonEmail,
         companySigners,
+        canAddDocuments,
         documentTypes,
         signerTypes,
         companyEmail,
