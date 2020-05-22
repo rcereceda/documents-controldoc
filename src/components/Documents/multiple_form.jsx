@@ -6,7 +6,9 @@ import DocumentsContext from "../../contexts/documents/DocumentsContext.jsx";
 
 const MultipleForm = props => {
   const { t } = props;
-  const { companyEmail, personEmail } = useContext(DocumentsContext);
+  const { companyEmail, personEmail, canAddDocuments } = useContext(
+    DocumentsContext
+  );
 
   const [documents, setDocuments] = useState(props.documents);
   const [clientEmail, setClientEmail] = useState("");
@@ -57,20 +59,22 @@ const MultipleForm = props => {
   };
 
   const drawAddDocumentButton = () => {
-    return (
-      <div className="col-12 form-group">
-        <div className="text-right float-right d-inline-block">
-          <button
-            type="button"
-            className="btn btn-primary btn-sm mt-3 mb-3"
-            onClick={handleAddDocument}
-          >
-            <i className="fas fa-plus-circle" /> &nbsp;{" "}
-            {t("documents.action.add")}
-          </button>
+    if (canAddDocuments) {
+      return (
+        <div className="col-12 form-group">
+          <div className="text-right float-right d-inline-block">
+            <button
+              type="button"
+              className="btn btn-primary btn-sm mt-3 mb-3"
+              onClick={handleAddDocument}
+            >
+              <i className="fas fa-plus-circle" /> &nbsp;{" "}
+              {t("documents.action.add")}
+            </button>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   };
 
   return (
