@@ -11,7 +11,6 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
     companyEmail,
     personEmail,
     externalEmail,
-    changingPersonEmail,
     formFor
   } = useContext(DocumentsContext);
 
@@ -24,34 +23,6 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
   useEffect(() => {
     if (!document.signature_required) handleChangeUploadRequired();
   }, [document.upload_required]);
-
-  useEffect(() => {
-    const newSigners = [...signers];
-    newSigners.map(signer => {
-      if (
-        signer.signer_type_id === getSignerTypeId("person") &&
-        changingPersonEmail &&
-        document.is_editable
-      ) {
-        signer.email = personEmail;
-      }
-    });
-    setSigners(newSigners);
-  }, [personEmail, changingPersonEmail]);
-
-  useEffect(() => {
-    const newSigners = [...signers];
-    newSigners.map(signer => {
-      if (
-        signer.signer_type_id === getSignerTypeId("client") &&
-        document.is_editable
-      ) {
-        signer.email =
-          externalEmail.trim() === "" ? signer.email : externalEmail;
-      }
-    });
-    setSigners(newSigners);
-  }, [externalEmail]);
 
   const getSignerTypeId = type => {
     return _.get(_.find(signerTypes, { type: type }), "value");
@@ -221,6 +192,7 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
         handleMoveSigner={handleMoveSigner}
         handleRemoveSigner={handleRemoveSigner}
         t={t}
+        getSignerTypeId={getSignerTypeId}
       />
     );
   };

@@ -1,4 +1,11 @@
-import React, { Fragment, memo, useContext, useState, useRef } from "react";
+import React, {
+  Fragment,
+  memo,
+  useContext,
+  useState,
+  useRef,
+  useEffect
+} from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import { useDrag, useDrop } from "react-dnd";
@@ -20,7 +27,8 @@ const SignerForm = props => {
     signerIndex,
     signersOrderRequired,
     handleMoveSigner,
-    handleRemoveSigner
+    handleRemoveSigner,
+    getSignerTypeId
   } = props;
 
   const {
@@ -28,13 +36,41 @@ const SignerForm = props => {
     signerTypes,
     formName,
     handleChangeEmail,
-    formFor
+    formFor,
+    personEmail,
+    changingPersonEmail,
+    externalEmail
   } = useContext(DocumentsContext);
 
   const [signer, setSigner] = useState(documentSigner);
   const [signerValue, setSignerValue] = useState(
     _.find(companySigners, { value: signer.email })
   );
+
+  useEffect(() => {
+    const newSigner = { ...signer };
+    if (
+      newSigner.signer_type_id === getSignerTypeId("person") &&
+      changingPersonEmail &&
+      document.is_editable
+    ) {
+      newSigner.email = personEmail;
+    }
+    setSigner(newSigner);
+  }, [personEmail, changingPersonEmail]);
+
+  useEffect(() => {
+    const newSigner = { ...signer };
+    if (
+      newSigner.signer_type_id === getSignerTypeId("external") &&
+      document.is_editable &&
+      formFor === "person"
+    ) {
+      newSigner.email =
+        externalEmail.trim() === "" ? signer.email : externalEmail;
+    }
+    setSigner(newSigner);
+  }, [externalEmail]);
 
   // --------------------------------------------------------
   const ref = useRef(null);
@@ -123,10 +159,12 @@ const SignerForm = props => {
                 <input
                   className="form-control"
                   type="text"
-                  value={signer.email}
+                  defaultValue={signer.email}
                   name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
                   onChange={e => {
-                    handleChangeEmail(e.target.value, options["signer_type"]);
+                    if (formFor === "person") {
+                      handleChangeEmail(e.target.value, options["signer_type"]);
+                    }
                   }}
                 />
               </div>
