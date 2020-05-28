@@ -1,6 +1,6 @@
 import {
   CHANGE_PERSON_EMAIL,
-  CHANGE_CLIENT_EMAIL
+  CHANGE_EXTERNAL_EMAIL
 } from "../../types/index.jsx";
 
 export default (state, action) => {
@@ -11,10 +11,10 @@ export default (state, action) => {
         personEmail: action.payload,
         changingPersonEmail: true
       };
-    case CHANGE_CLIENT_EMAIL:
+    case CHANGE_EXTERNAL_EMAIL:
       return {
         ...state,
-        clientEmail: action.payload
+        externalEmail: action.payload
       };
     default:
       return state;

@@ -6,12 +6,11 @@ import DocumentsContext from "../../contexts/documents/DocumentsContext.jsx";
 
 const MultipleForm = props => {
   const { t } = props;
-  const { companyEmail, personEmail, canAddDocuments } = useContext(
+  const { companyEmail, personEmail, canAddDocuments, formFor } = useContext(
     DocumentsContext
   );
 
   const [documents, setDocuments] = useState(props.documents);
-  const [clientEmail, setClientEmail] = useState("");
 
   const handleAddDocument = () => {
     const documentsTemp = [...documents];
@@ -24,7 +23,7 @@ const MultipleForm = props => {
       file: "",
       company_email: companyEmail,
       person_email: personEmail,
-      client_email: clientEmail,
+      external_email: "",
       signers_attributes: [],
       is_editable: true,
       can_delete: true
@@ -79,14 +78,16 @@ const MultipleForm = props => {
 
   return (
     <div id="documents">
-      <div className="row">
-        <div className="form-group col-sm-12">
-          <h3 className="font-weight-bold d-inline-block mb-3 mt-3 h5">
-            <i className="fas fa-building" /> &nbsp;{" "}
-            {t("documents.html_helpers.others")}
-          </h3>
+      {formFor === "person" && (
+        <div className="row">
+          <div className="form-group col-sm-12">
+            <h3 className="font-weight-bold d-inline-block mb-3 mt-3 h5">
+              <i className="fas fa-building" /> &nbsp;{" "}
+              {t("documents.html_helpers.others")}
+            </h3>
+          </div>
         </div>
-      </div>
+      )}
       {drawDocumentsForm()}
       {drawAddDocumentButton()}
     </div>

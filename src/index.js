@@ -16,6 +16,8 @@ const MultipleDocuments = props => {
     canAddDocuments
   } = props;
 
+  const formFor = props.formFor || "person";
+
   const [t] = useTranslation();
 
   return (
@@ -27,6 +29,7 @@ const MultipleDocuments = props => {
       personEmail={person_email}
       companyEmail={company_email}
       canAddDocuments={canAddDocuments}
+      formFor={formFor}
     >
       <I18nextProvider i18n={i18n}>
         <Documents documents={documents || []} />

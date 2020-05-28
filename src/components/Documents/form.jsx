@@ -10,7 +10,7 @@ import SignersList from "./SignersList.jsx";
 
 const DocumentForm = props => {
   const { t, index, handleRemoveDocument } = props;
-  const { handleKeyUp, formName } = useContext(DocumentsContext);
+  const { handleKeyUp, formName, formFor } = useContext(DocumentsContext);
   const [document, setDocument] = useState(props.document);
 
   const {
@@ -112,8 +112,10 @@ const DocumentForm = props => {
   return (
     <div className={`row ${document._destroy ? "d-none" : ""}`}>
       <div className="col-sm-12">
-        <div className="card mb-3">
-          <div className="float-right">{drawDeleteDocumentButton()}</div>
+        <div className="card mb-3 py-3">
+          <div className="float-right">
+            {formFor === "person" && drawDeleteDocumentButton()}
+          </div>
           <div className="card-body pt-0">
             <div className="row d-flex">
               <div className="col-md-9 flex-fill px-3">
@@ -142,11 +144,12 @@ const DocumentForm = props => {
                     attribute: "signers_order_required",
                     label: t("documents.attributes.signers_order_required")
                   })}
-                {drawDocumentValue({
-                  type: "checkbox",
-                  attribute: "upload_required",
-                  label: t("documents.attributes.upload_required")
-                })}
+                {formFor === "person" &&
+                  drawDocumentValue({
+                    type: "checkbox",
+                    attribute: "upload_required",
+                    label: t("documents.attributes.upload_required")
+                  })}
               </div>
             </div>
             <div

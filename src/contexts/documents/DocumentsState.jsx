@@ -3,7 +3,7 @@ import DocumentsContext from "./DocumentsContext.jsx";
 import DocumentsReducer from "./DocumentsReducer.jsx";
 import {
   CHANGE_PERSON_EMAIL,
-  CHANGE_CLIENT_EMAIL
+  CHANGE_EXTERNAL_EMAIL
 } from "../../types/index.jsx";
 
 const DocumentsState = props => {
@@ -15,12 +15,13 @@ const DocumentsState = props => {
     companyEmail,
     formName,
     personEmail,
-    canAddDocuments
+    canAddDocuments,
+    formFor
   } = props;
 
   const initialState = {
     personEmail,
-    clientEmail: "",
+    externalEmail: "",
     changingPersonEmail: false
   };
 
@@ -28,7 +29,7 @@ const DocumentsState = props => {
 
   const handleChangeEmail = (email, signerType) => {
     const type =
-      signerType === "person" ? CHANGE_PERSON_EMAIL : CHANGE_CLIENT_EMAIL;
+      signerType === "person" ? CHANGE_PERSON_EMAIL : CHANGE_EXTERNAL_EMAIL;
     dispatch({
       type,
       payload: email
@@ -39,7 +40,7 @@ const DocumentsState = props => {
     <DocumentsContext.Provider
       value={{
         personEmail: state.personEmail,
-        clientEmail: state.clientEmail,
+        externalEmail: state.externalEmail,
         changingPersonEmail: state.changingPersonEmail,
         companySigners,
         canAddDocuments,
@@ -47,6 +48,7 @@ const DocumentsState = props => {
         signerTypes,
         companyEmail,
         formName,
+        formFor,
         handleChangeEmail
       }}
     >

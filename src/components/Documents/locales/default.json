@@ -16,8 +16,13 @@
       "person_email": "Correo electrónico personal del Trabajador",
       "company_email": "Correo electrónico de quien autoriza - Empleador",
       "client_email": "Correo electrónico del Cliente",
+      "external_email": "Correo electrónico del usuario Externo",
       "signers": {
         "options": "Seleccione un opción"
+      },
+      "signer_types": {
+        "options": "Seleccione una opción",
+        "label": "Tipo de Firmante"
       }
     },
     "action": {
