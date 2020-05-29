@@ -15,6 +15,7 @@
       "signers_order_required": "¿Requiere un orden de firma?",
       "person_email": "Correo electrónico personal del Trabajador",
       "company_email": "Correo electrónico de quien autoriza - Empleador",
+      "internal_email": "Correo electrónico de quien autoriza - Interno",
       "client_email": "Correo electrónico del Cliente",
       "external_email": "Correo electrónico del usuario Externo",
       "signers": {

@@ -49,6 +49,12 @@ const SignerForm = props => {
 
   useEffect(() => {
     const newSigner = { ...signer };
+    newSigner.order = signerIndex;
+    setSigner(newSigner);
+  }, [signerIndex]);
+
+  useEffect(() => {
+    const newSigner = { ...signer };
     if (
       newSigner.signer_type_id === getSignerTypeId("person") &&
       changingPersonEmail &&
@@ -123,7 +129,11 @@ const SignerForm = props => {
     if (signerType === "company") {
       return (
         <Fragment>
-          <label className="label-bold">{options["label"]}</label>
+          <label className="label-bold">
+            {formFor === "person"
+              ? t(`documents.attributes.company_email`)
+              : t(`documents.attributes.internal_email`)}
+          </label>
           {document.is_editable ? (
             <Select
               onChange={newValue => {
@@ -207,7 +217,7 @@ const SignerForm = props => {
     <input
       type="hidden"
       name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${attribute}]`}
-      value={signer.id}
+      value={signer[attribute]}
     />
   );
 
@@ -216,7 +226,7 @@ const SignerForm = props => {
       return drawHiddenInput("signer_type_id");
     } else if (formFor === "company") {
       return (
-        <div className="col-md-4">
+        <div className="col-md-5">
           <label className="label-bold">
             {t(`documents.attributes.signer_types.label`)}
           </label>
@@ -252,13 +262,16 @@ const SignerForm = props => {
           : {}
       }
     >
+      {signersOrderRequired && (
+        <div className="row">
+          <div className="col-md-12">
+            <span className="text-muted">{signerIndex + 1}° Firma</span>
+          </div>
+        </div>
+      )}
       <div className="row pb-3">
         {drawSignerTypeInput()}
-        <div className={`col-md-${formFor === "person" ? "6" : "4"}`}>
-          {signersOrderRequired && (
-            <span className="text-muted">{signerIndex + 1}° Firma</span>
-          )}
-          <br />
+        <div className={`col-md-${formFor === "person" ? "6" : "6"}`}>
           {drawDocumentValue({
             type: "text",
             attribute: "email",
@@ -267,7 +280,7 @@ const SignerForm = props => {
             label: t(`documents.attributes.${signerType}_email`)
           })}
         </div>
-        <div className={`col-md-${formFor === "person" ? "6" : "4"}`}>
+        <div className={`col-md-${formFor === "person" ? "6" : "1"}`}>
           {drawDeleteSignerButton()}
         </div>
         {drawHiddenInput("id")}

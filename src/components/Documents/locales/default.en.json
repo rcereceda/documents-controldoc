@@ -15,6 +15,7 @@
       "signers_order_required": "Requires a signing order?",
       "person_email": "Employee personal email",
       "company_email": "Employer email",
+      "internal_email": "Internal email",
       "client_email": "Client email",
       "external_email": "External email",
       "signers": {
