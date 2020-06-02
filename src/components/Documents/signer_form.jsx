@@ -240,6 +240,7 @@ const SignerForm = props => {
               signerTypes,
               signerType => signerType.type !== "person"
             )}
+            value={_.find(signerTypes, { value: signer.signer_type_id })}
             name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][signer_type_id]`}
             placeholder={`-- ${t(
               "documents.attributes.signer_types.options"
