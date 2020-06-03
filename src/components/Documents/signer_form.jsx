@@ -156,7 +156,9 @@ const SignerForm = props => {
           <label className="label-bold">
             {formFor === "company"
               ? t(`documents.attributes.external_email`)
-              : t(`documents.attributes.client_email`)}
+              : document.for_client
+              ? t(`documents.attributes.client_email`)
+              : t(`documents.attributes.person_email`)}
           </label>
           {document.is_editable ? (
             <Fragment>
