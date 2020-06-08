@@ -38,13 +38,13 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
     const companySigner = {
       signer_type_id: formFor === "person" ? getSignerTypeId("company") : "",
       email: companyEmail,
-      order: formFor === "person" ? 1 : 0,
+      order: formFor === "company" || document.for_client ? 0 : 1,
       _destroy: false
     };
     const externalSigner = {
       signer_type_id: formFor === "person" ? getSignerTypeId("external") : "",
       email: externalEmail,
-      order: formFor === "person" ? 2 : 1,
+      order: formFor === "company" || document.for_client ? 1 : 2,
       _destroy: false
     };
     const newSigners = [...signers];
