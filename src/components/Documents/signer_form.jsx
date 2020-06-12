@@ -44,7 +44,7 @@ const SignerForm = props => {
 
   const [signer, setSigner] = useState(documentSigner);
   const [signerValue, setSignerValue] = useState(
-    _.find(companySigners, { value: signer.email })
+    _.find(companySigners, { value: documentSigner.email })
   );
 
   useEffect(() => {
@@ -64,6 +64,11 @@ const SignerForm = props => {
     }
     setSigner(newSigner);
   }, [personEmail, changingPersonEmail]);
+
+  useEffect(() => {
+    setSigner(documentSigner);
+    setSignerValue(_.find(companySigners, { value: documentSigner.email }));
+  }, [documentSigner]);
 
   useEffect(() => {
     const newSigner = { ...signer };
