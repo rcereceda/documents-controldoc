@@ -37,8 +37,6 @@ const SignerForm = props => {
     formName,
     handleChangeEmail,
     formFor,
-    personEmail,
-    changingPersonEmail,
     externalEmail
   } = useContext(DocumentsContext);
 
@@ -52,18 +50,6 @@ const SignerForm = props => {
     newSigner.order = signerIndex;
     setSigner(newSigner);
   }, [signerIndex]);
-
-  useEffect(() => {
-    const newSigner = { ...signer };
-    if (
-      newSigner.signer_type_id === getSignerTypeId("person") &&
-      changingPersonEmail &&
-      document.is_editable
-    ) {
-      newSigner.email = personEmail;
-    }
-    setSigner(newSigner);
-  }, [personEmail, changingPersonEmail]);
 
   useEffect(() => {
     setSigner(documentSigner);
@@ -131,67 +117,93 @@ const SignerForm = props => {
   };
 
   const drawDocumentValue = options => {
-    if (signerType === "company") {
-      return (
-        <Fragment>
-          <label className="label-bold">
-            {formFor === "person"
-              ? t(`documents.attributes.company_email`)
-              : t(`documents.attributes.internal_email`)}
-          </label>
-          {document.is_editable ? (
-            <Select
-              onChange={newValue => {
-                setSignerValue(newValue);
-              }}
-              options={companySigners}
-              value={signerValue}
-              name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
-              placeholder={`-- ${t("documents.attributes.signers.options")} --`}
-            />
-          ) : (
-            <p>{signerValue.label}</p>
-          )}
-          <InputError attr={options["attribute"]} errors={signer.errors} />
-        </Fragment>
-      );
-    } else if (signerType === "person" || signerType === "external") {
-      return (
-        <Fragment>
-          <label className="label-bold">
-            {formFor === "company"
-              ? t(`documents.attributes.external_email`)
-              : document.for_client
-              ? t(`documents.attributes.client_email`)
-              : t(`documents.attributes.person_email`)}
-          </label>
-          {document.is_editable ? (
-            <Fragment>
-              <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                  <span className="input-group-text" id="addon">
-                    <i className="far fa-envelope" />
-                  </span>
-                </div>
-                <input
-                  className="form-control"
-                  type="text"
-                  defaultValue={signer.email}
-                  name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
-                  onChange={e => {
-                    if (formFor === "person") {
-                      handleChangeEmail(e.target.value, options["signer_type"]);
-                    }
-                  }}
-                />
-              </div>
-              <InputError attr={options["attribute"]} errors={signer.errors} />
-            </Fragment>
-          ) : (
+    switch (signerType) {
+      case "company":
+        return (
+          <Fragment>
+            <label className="label-bold">
+              {formFor === "person"
+                ? t(`documents.attributes.company_email`)
+                : t(`documents.attributes.internal_email`)}
+            </label>
+            {document.is_editable ? (
+              <Select
+                onChange={newValue => {
+                  setSignerValue(newValue);
+                }}
+                options={companySigners}
+                value={signerValue}
+                name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
+                placeholder={`-- ${t(
+                  "documents.attributes.signers.options"
+                )} --`}
+              />
+            ) : (
+              <p>{signerValue.label}</p>
+            )}
+            <InputError attr={options["attribute"]} errors={signer.errors} />
+          </Fragment>
+        );
+      case "person":
+        return (
+          <Fragment>
+            <label className="label-bold">
+              {t(`documents.attributes.person_email`)}
+            </label>
             <p>{signer.email}</p>
-          )}
-        </Fragment>
-      );
+            {document.is_editable && (
+              <input
+                className="form-control"
+                type="hidden"
+                defaultValue={signer.email}
+                name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
+              />
+            )}
+          </Fragment>
+        );
+      case "external":
+        return (
+          <Fragment>
+            <label className="label-bold">
+              {formFor === "company"
+                ? t(`documents.attributes.external_email`)
+                : t(`documents.attributes.client_email`)}
+            </label>
+            {document.is_editable ? (
+              <Fragment>
+                <div className="input-group mb-3">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text" id="addon">
+                      <i className="far fa-envelope" />
+                    </span>
+                  </div>
+                  <input
+                    className="form-control"
+                    type="text"
+                    defaultValue={signer.email}
+                    name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
+                    onChange={e => {
+                      if (formFor === "person") {
+                        handleChangeEmail(
+                          e.target.value,
+                          options["signer_type"]
+                        );
+                      }
+                    }}
+                  />
+                </div>
+                <InputError
+                  attr={options["attribute"]}
+                  errors={signer.errors}
+                />
+              </Fragment>
+            ) : (
+              <p>{signer.email}</p>
+            )}
+          </Fragment>
+        );
+      default:
+        break;
     }
   };
 
