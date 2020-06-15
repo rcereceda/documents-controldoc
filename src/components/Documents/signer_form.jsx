@@ -232,13 +232,17 @@ const SignerForm = props => {
     }
   };
 
-  const drawHiddenInput = attribute => (
-    <input
-      type="hidden"
-      name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${attribute}]`}
-      value={signer[attribute]}
-    />
-  );
+  const drawHiddenInput = attribute => {
+    if (document.is_editable) {
+      return (
+        <input
+          type="hidden"
+          name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${attribute}]`}
+          value={signer[attribute]}
+        />
+      );
+    }
+  };
 
   const drawSignerTypeInput = () => {
     if (formFor === "person") {
