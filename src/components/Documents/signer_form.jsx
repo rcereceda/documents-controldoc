@@ -117,6 +117,17 @@ const SignerForm = props => {
     handleRemoveSigner(signerIndex);
   };
 
+  const handleChangeExternalEmail = e => {
+    const value = e.target.value;
+    if (formFor === "person") {
+      handleChangeEmail(value);
+    } else if (formFor === "company") {
+      const newSigner = { ...signer };
+      newSigner.email = value;
+      setSigner(newSigner);
+    }
+  };
+
   const drawDocumentValue = options => {
     switch (signerType) {
       case "company":
@@ -183,11 +194,7 @@ const SignerForm = props => {
                     type="text"
                     value={signer.email}
                     name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
-                    onChange={e => {
-                      if (formFor === "person") {
-                        handleChangeEmail(e.target.value);
-                      }
-                    }}
+                    onChange={e => handleChangeExternalEmail(e)}
                   />
                 </div>
                 <InputError
