@@ -17,7 +17,8 @@ const DocumentsState = props => {
   } = props;
 
   const initialState = {
-    externalEmail: ""
+    externalEmail: "",
+    changingExternalEmail: false
   };
 
   const [state, dispatch] = useReducer(DocumentsReducer, initialState);
@@ -34,7 +35,7 @@ const DocumentsState = props => {
     <DocumentsContext.Provider
       value={{
         externalEmail: state.externalEmail,
-        changingPersonEmail: state.changingPersonEmail,
+        changingExternalEmail: state.changingExternalEmail,
         personEmail,
         companySigners,
         canAddDocuments,

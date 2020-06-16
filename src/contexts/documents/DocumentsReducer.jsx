@@ -5,7 +5,8 @@ export default (state, action) => {
     case CHANGE_EXTERNAL_EMAIL:
       return {
         ...state,
-        externalEmail: action.payload
+        externalEmail: action.payload,
+        changingExternalEmail: true
       };
     default:
       return state;

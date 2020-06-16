@@ -37,7 +37,8 @@ const SignerForm = props => {
     formName,
     handleChangeEmail,
     formFor,
-    externalEmail
+    externalEmail,
+    changingExternalEmail
   } = useContext(DocumentsContext);
 
   const [signer, setSigner] = useState(documentSigner);
@@ -61,13 +62,13 @@ const SignerForm = props => {
     if (
       newSigner.signer_type_id === getSignerTypeId("external") &&
       document.is_editable &&
-      formFor === "person"
+      formFor === "person" &&
+      changingExternalEmail
     ) {
-      newSigner.email =
-        externalEmail.trim() === "" ? signer.email : externalEmail;
+      newSigner.email = externalEmail;
     }
     setSigner(newSigner);
-  }, [externalEmail]);
+  }, [externalEmail, changingExternalEmail]);
 
   // --------------------------------------------------------
   const ref = useRef(null);
@@ -180,14 +181,11 @@ const SignerForm = props => {
                   <input
                     className="form-control"
                     type="text"
-                    defaultValue={signer.email}
+                    value={signer.email}
                     name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
                     onChange={e => {
                       if (formFor === "person") {
-                        handleChangeEmail(
-                          e.target.value,
-                          options["signer_type"]
-                        );
+                        handleChangeEmail(e.target.value);
                       }
                     }}
                   />
