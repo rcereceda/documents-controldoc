@@ -18,7 +18,8 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
   const [signers, setSigners] = useState(documentSigners);
 
   useEffect(() => {
-    if (!document.upload_required) handleChangeSignatureRequired();
+    if (!document.upload_required && changingSignatureRequired)
+      handleChangeSignatureRequired();
   }, [document.signature_required, document.for_client]);
 
   useEffect(() => {

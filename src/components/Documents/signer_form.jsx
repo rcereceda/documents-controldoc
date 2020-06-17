@@ -58,6 +58,10 @@ const SignerForm = props => {
   }, [documentSigner]);
 
   useEffect(() => {
+    setSigner(documentSigner);
+  }, [documentSigner._destroy]);
+
+  useEffect(() => {
     const newSigner = { ...signer };
     if (
       newSigner.signer_type_id === getSignerTypeId("external") &&
@@ -243,7 +247,7 @@ const SignerForm = props => {
         <input
           type="hidden"
           name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${attribute}]`}
-          value={signer[attribute]}
+          defaultValue={signer[attribute]}
         />
       );
     }
