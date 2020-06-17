@@ -1,4 +1,7 @@
-import { CHANGE_EXTERNAL_EMAIL } from "../../types/index.jsx";
+import {
+  CHANGE_EXTERNAL_EMAIL,
+  CHANGE_SIGNATURE_REQUIRED
+} from "../../types/index.jsx";
 
 export default (state, action) => {
   switch (action.type) {
@@ -7,6 +10,11 @@ export default (state, action) => {
         ...state,
         externalEmail: action.payload,
         changingExternalEmail: true
+      };
+    case CHANGE_SIGNATURE_REQUIRED:
+      return {
+        ...state,
+        changingSignatureRequired: true
       };
     default:
       return state;

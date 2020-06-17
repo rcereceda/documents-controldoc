@@ -1,7 +1,10 @@
 import React, { useReducer } from "react";
 import DocumentsContext from "./DocumentsContext.jsx";
 import DocumentsReducer from "./DocumentsReducer.jsx";
-import { CHANGE_EXTERNAL_EMAIL } from "../../types/index.jsx";
+import {
+  CHANGE_EXTERNAL_EMAIL,
+  CHANGE_SIGNATURE_REQUIRED
+} from "../../types/index.jsx";
 
 const DocumentsState = props => {
   const {
@@ -18,7 +21,8 @@ const DocumentsState = props => {
 
   const initialState = {
     externalEmail: "",
-    changingExternalEmail: false
+    changingExternalEmail: false,
+    changingSignatureRequired: false
   };
 
   const [state, dispatch] = useReducer(DocumentsReducer, initialState);
@@ -31,11 +35,18 @@ const DocumentsState = props => {
     });
   };
 
+  const handleChangeSignature = () => {
+    dispatch({
+      type: CHANGE_SIGNATURE_REQUIRED
+    });
+  };
+
   return (
     <DocumentsContext.Provider
       value={{
         externalEmail: state.externalEmail,
         changingExternalEmail: state.changingExternalEmail,
+        changingSignatureRequired: state.changingSignatureRequired,
         personEmail,
         companySigners,
         canAddDocuments,
@@ -44,7 +55,8 @@ const DocumentsState = props => {
         companyEmail,
         formName,
         formFor,
-        handleChangeEmail
+        handleChangeEmail,
+        handleChangeSignature
       }}
     >
       {children}

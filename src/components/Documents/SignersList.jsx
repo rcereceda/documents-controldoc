@@ -11,13 +11,14 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
     companyEmail,
     personEmail,
     externalEmail,
-    formFor
+    formFor,
+    changingSignatureRequired
   } = useContext(DocumentsContext);
 
   const [signers, setSigners] = useState(documentSigners);
 
   useEffect(() => {
-    handleChangeSignatureRequired();
+    if (!document.upload_required) handleChangeSignatureRequired();
   }, [document.signature_required, document.for_client]);
 
   useEffect(() => {
@@ -29,6 +30,15 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
   };
 
   const handleChangeSignatureRequired = () => {
+    const newSigners = [...signers];
+    _.remove(newSigners, signer => {
+      return (
+        signer.id === "" ||
+        typeof signer.id === "undefined" ||
+        signer.id === undefined
+      );
+    });
+
     const personSigner = {
       signer_type_id: getSignerTypeId("person"),
       email: personEmail,
@@ -47,14 +57,6 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
       order: formFor === "company" || document.for_client ? 1 : 2,
       _destroy: false
     };
-    const newSigners = [...signers];
-    _.remove(newSigners, signer => {
-      return (
-        signer.id === "" ||
-        typeof signer.id === "undefined" ||
-        signer.id === undefined
-      );
-    });
 
     if (document.signature_required) {
       if (newSigners.length > 0) {

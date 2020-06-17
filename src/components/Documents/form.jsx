@@ -10,7 +10,9 @@ import SignersList from "./SignersList.jsx";
 
 const DocumentForm = props => {
   const { t, index, handleRemoveDocument } = props;
-  const { handleKeyUp, formName, formFor } = useContext(DocumentsContext);
+  const { handleKeyUp, formName, formFor, handleChangeSignature } = useContext(
+    DocumentsContext
+  );
   const [document, setDocument] = useState(props.document);
 
   const {
@@ -31,6 +33,7 @@ const DocumentForm = props => {
         documentTemp.signature_required = value;
         if (value && upload_required) documentTemp.upload_required = !value;
         if (!value) documentTemp.signers_order_required = value;
+        handleChangeSignature();
         break;
       case "upload_required":
         documentTemp.upload_required = value;
