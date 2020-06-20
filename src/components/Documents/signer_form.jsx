@@ -175,6 +175,7 @@ const SignerForm = props => {
                 name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
               />
             )}
+            <InputError attr={options["attribute"]} errors={signer.errors} />
           </Fragment>
         );
       case "external":
@@ -283,6 +284,23 @@ const SignerForm = props => {
     }
   };
 
+  const drawSignStatus = () => {
+    let color, icon;
+    if (signer.signed_at) {
+      color = "fa-success";
+      icon = "fa-check";
+    } else {
+      color = "fa-pending";
+      icon = "fa-minus";
+    }
+
+    return (
+      <span className="float-right">
+        <i className={`fas ${icon} ${color}`} />
+      </span>
+    );
+  };
+
   return (
     <div
       className={`card bg-light mb-3 px-3 pt-3 ${
@@ -315,6 +333,7 @@ const SignerForm = props => {
         </div>
         <div className={`col-md-${formFor === "person" ? "6" : "1"}`}>
           {drawDeleteSignerButton()}
+          {!document.is_editable && drawSignStatus()}
         </div>
         {drawHiddenInput("id")}
         {drawHiddenInput("order")}
