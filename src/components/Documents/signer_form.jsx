@@ -1,4 +1,11 @@
-import React, { Fragment, memo, useContext, useState, useRef } from "react";
+import React, {
+  Fragment,
+  memo,
+  useContext,
+  useState,
+  useRef,
+  useEffect
+} from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import { useDrag, useDrop } from "react-dnd";
@@ -15,24 +22,57 @@ const SignerForm = props => {
   const {
     document,
     documentIndex,
-    signer,
+    documentSigner,
     t,
     signerIndex,
     signersOrderRequired,
     handleMoveSigner,
-    handleRemoveSigner
+    handleRemoveSigner,
+    getSignerTypeId
   } = props;
 
   const {
     companySigners,
     signerTypes,
     formName,
-    handleChangeEmail
+    handleChangeEmail,
+    formFor,
+    externalEmail,
+    changingExternalEmail
   } = useContext(DocumentsContext);
 
+  const [signer, setSigner] = useState(documentSigner);
   const [signerValue, setSignerValue] = useState(
-    _.find(companySigners, { value: signer.email })
+    _.find(companySigners, { value: documentSigner.email })
   );
+
+  useEffect(() => {
+    const newSigner = { ...signer };
+    newSigner.order = signerIndex;
+    setSigner(newSigner);
+  }, [signerIndex]);
+
+  useEffect(() => {
+    setSigner(documentSigner);
+    setSignerValue(_.find(companySigners, { value: documentSigner.email }));
+  }, [documentSigner]);
+
+  useEffect(() => {
+    setSigner(documentSigner);
+  }, [documentSigner._destroy]);
+
+  useEffect(() => {
+    const newSigner = { ...signer };
+    if (
+      newSigner.signer_type_id === getSignerTypeId("external") &&
+      document.is_editable &&
+      formFor === "person" &&
+      changingExternalEmail
+    ) {
+      newSigner.email = externalEmail;
+    }
+    setSigner(newSigner);
+  }, [externalEmail, changingExternalEmail]);
 
   // --------------------------------------------------------
   const ref = useRef(null);
@@ -81,61 +121,107 @@ const SignerForm = props => {
     handleRemoveSigner(signerIndex);
   };
 
+  const handleChangeExternalEmail = e => {
+    const value = e.target.value;
+    if (formFor === "person") {
+      handleChangeEmail(value);
+    } else if (formFor === "company") {
+      const newSigner = { ...signer };
+      newSigner.email = value;
+      setSigner(newSigner);
+    }
+  };
+
   const drawDocumentValue = options => {
-    if (signerType === "company") {
-      return (
-        <Fragment>
-          <label className="label-bold">{options["label"]}</label>
-          {document.is_editable ? (
-            <Select
-              onChange={newValue => {
-                setSignerValue(newValue);
-              }}
-              options={companySigners}
-              value={signerValue}
-              name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
-              placeholder={`-- ${t("documents.attributes.signers.options")} --`}
-            />
-          ) : (
-            <p>{signerValue.label}</p>
-          )}
-          <InputError attr={options["attribute"]} errors={signer.errors} />
-        </Fragment>
-      );
-    } else {
-      return (
-        <Fragment>
-          <label className="label-bold">{options["label"]}</label>
-          {document.is_editable ? (
-            <Fragment>
-              <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                  <span className="input-group-text" id="addon">
-                    <i className="far fa-envelope" />
-                  </span>
-                </div>
-                <input
-                  className="form-control"
-                  type="text"
-                  value={signer.email}
-                  name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
-                  onChange={e => {
-                    handleChangeEmail(e.target.value, options["signer_type"]);
-                  }}
-                />
-              </div>
-              <InputError attr={options["attribute"]} errors={signer.errors} />
-            </Fragment>
-          ) : (
+    switch (signerType) {
+      case "company":
+        return (
+          <Fragment>
+            <label className="label-bold">
+              {formFor === "person"
+                ? t(`documents.attributes.company_email`)
+                : t(`documents.attributes.internal_email`)}
+            </label>
+            {document.is_editable ? (
+              <Select
+                onChange={newValue => {
+                  setSignerValue(newValue);
+                }}
+                options={companySigners}
+                value={signerValue}
+                name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
+                placeholder={`-- ${t(
+                  "documents.attributes.signers.options"
+                )} --`}
+              />
+            ) : (
+              <p>{signerValue.label}</p>
+            )}
+            <InputError attr={options["attribute"]} errors={signer.errors} />
+          </Fragment>
+        );
+      case "person":
+        return (
+          <Fragment>
+            <label className="label-bold">
+              {t(`documents.attributes.person_email`)}
+            </label>
             <p>{signer.email}</p>
-          )}
-        </Fragment>
-      );
+            {document.is_editable && (
+              <input
+                className="form-control"
+                type="hidden"
+                defaultValue={signer.email}
+                name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
+              />
+            )}
+            <InputError attr={options["attribute"]} errors={signer.errors} />
+          </Fragment>
+        );
+      case "external":
+        return (
+          <Fragment>
+            <label className="label-bold">
+              {formFor === "company"
+                ? t(`documents.attributes.external_email`)
+                : t(`documents.attributes.client_email`)}
+            </label>
+            {document.is_editable ? (
+              <Fragment>
+                <div className="input-group mb-3">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text" id="addon">
+                      <i className="far fa-envelope" />
+                    </span>
+                  </div>
+                  <input
+                    className="form-control"
+                    type="text"
+                    value={signer.email}
+                    name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
+                    onChange={e => handleChangeExternalEmail(e)}
+                  />
+                </div>
+                <InputError
+                  attr={options["attribute"]}
+                  errors={signer.errors}
+                />
+              </Fragment>
+            ) : (
+              <p>{signer.email}</p>
+            )}
+          </Fragment>
+        );
+      default:
+        break;
     }
   };
 
   const drawDeleteSignerButton = () => {
-    if (document.is_editable && signerType === "company") {
+    if (
+      (document.is_editable && signerType === "company") ||
+      formFor === "company"
+    ) {
       return (
         <button
           type="button"
@@ -156,6 +242,65 @@ const SignerForm = props => {
     }
   };
 
+  const drawHiddenInput = attribute => {
+    if (document.is_editable) {
+      return (
+        <input
+          type="hidden"
+          name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${attribute}]`}
+          defaultValue={signer[attribute]}
+        />
+      );
+    }
+  };
+
+  const drawSignerTypeInput = () => {
+    if (formFor === "person") {
+      return drawHiddenInput("signer_type_id");
+    } else if (formFor === "company") {
+      return (
+        <div className="col-md-5">
+          <label className="label-bold">
+            {t(`documents.attributes.signer_types.label`)}
+          </label>
+          <Select
+            onChange={newValue => {
+              const newSigner = { ...signer };
+              newSigner.signer_type_id = newValue.value;
+              setSigner(newSigner);
+            }}
+            options={_.filter(
+              signerTypes,
+              signerType => signerType.type !== "person"
+            )}
+            value={_.find(signerTypes, { value: signer.signer_type_id })}
+            name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][signer_type_id]`}
+            placeholder={`-- ${t(
+              "documents.attributes.signer_types.options"
+            )} --`}
+          />
+        </div>
+      );
+    }
+  };
+
+  const drawSignStatus = () => {
+    let color, icon;
+    if (signer.signed_at) {
+      color = "fa-success";
+      icon = "fa-check";
+    } else {
+      color = "fa-pending";
+      icon = "fa-minus";
+    }
+
+    return (
+      <span className="float-right">
+        <i className={`fas ${icon} ${color}`} />
+      </span>
+    );
+  };
+
   return (
     <div
       className={`card bg-light mb-3 px-3 pt-3 ${
@@ -168,12 +313,16 @@ const SignerForm = props => {
           : {}
       }
     >
-      <div className="row pb-3">
-        <div className="col-md-6">
-          {signersOrderRequired && (
+      {signersOrderRequired && (
+        <div className="row">
+          <div className="col-md-12">
             <span className="text-muted">{signerIndex + 1}° Firma</span>
-          )}
-          <br />
+          </div>
+        </div>
+      )}
+      <div className="row pb-3">
+        {drawSignerTypeInput()}
+        <div className={`col-md-${formFor === "person" ? "6" : "6"}`}>
           {drawDocumentValue({
             type: "text",
             attribute: "email",
@@ -182,27 +331,13 @@ const SignerForm = props => {
             label: t(`documents.attributes.${signerType}_email`)
           })}
         </div>
-        <div className="col-md-6">{drawDeleteSignerButton()}</div>
-        <input
-          type="hidden"
-          name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][id]`}
-          value={signer.id}
-        />
-        <input
-          type="hidden"
-          name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][order]`}
-          value={signerIndex}
-        />
-        <input
-          type="hidden"
-          name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][signer_type_id]`}
-          value={signer.signer_type_id}
-        />
-        <input
-          type="hidden"
-          name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][_destroy]`}
-          value={signer._destroy || false}
-        />
+        <div className={`col-md-${formFor === "person" ? "6" : "1"}`}>
+          {drawDeleteSignerButton()}
+          {!document.is_editable && drawSignStatus()}
+        </div>
+        {drawHiddenInput("id")}
+        {drawHiddenInput("order")}
+        {drawHiddenInput("_destroy")}
       </div>
     </div>
   );
@@ -214,7 +349,7 @@ SignerForm.propTypes = {
   handleMoveSigner: PropTypes.func.isRequired,
   handleRemoveSigner: PropTypes.func.isRequired,
   signerIndex: PropTypes.number.isRequired,
-  signer: PropTypes.object.isRequired,
+  documentSigner: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired
 };
 

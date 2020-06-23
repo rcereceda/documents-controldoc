@@ -2,8 +2,8 @@ import React, { useReducer } from "react";
 import DocumentsContext from "./DocumentsContext.jsx";
 import DocumentsReducer from "./DocumentsReducer.jsx";
 import {
-  CHANGE_PERSON_EMAIL,
-  CHANGE_CLIENT_EMAIL
+  CHANGE_EXTERNAL_EMAIL,
+  CHANGE_SIGNATURE_REQUIRED
 } from "../../types/index.jsx";
 
 const DocumentsState = props => {
@@ -15,39 +15,48 @@ const DocumentsState = props => {
     companyEmail,
     formName,
     personEmail,
-    canAddDocuments
+    canAddDocuments,
+    formFor
   } = props;
 
   const initialState = {
-    personEmail,
-    clientEmail: "",
-    changingPersonEmail: false
+    externalEmail: "",
+    changingExternalEmail: false,
+    changingSignatureRequired: false
   };
 
   const [state, dispatch] = useReducer(DocumentsReducer, initialState);
 
-  const handleChangeEmail = (email, signerType) => {
-    const type =
-      signerType === "person" ? CHANGE_PERSON_EMAIL : CHANGE_CLIENT_EMAIL;
+  const handleChangeEmail = email => {
+    const type = CHANGE_EXTERNAL_EMAIL;
     dispatch({
       type,
       payload: email
     });
   };
 
+  const handleChangeSignature = () => {
+    dispatch({
+      type: CHANGE_SIGNATURE_REQUIRED
+    });
+  };
+
   return (
     <DocumentsContext.Provider
       value={{
-        personEmail: state.personEmail,
-        clientEmail: state.clientEmail,
-        changingPersonEmail: state.changingPersonEmail,
+        externalEmail: state.externalEmail,
+        changingExternalEmail: state.changingExternalEmail,
+        changingSignatureRequired: state.changingSignatureRequired,
+        personEmail,
         companySigners,
         canAddDocuments,
         documentTypes,
         signerTypes,
         companyEmail,
         formName,
-        handleChangeEmail
+        formFor,
+        handleChangeEmail,
+        handleChangeSignature
       }}
     >
       {children}

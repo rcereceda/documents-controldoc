@@ -10,78 +10,56 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
     signerTypes,
     companyEmail,
     personEmail,
-    clientEmail,
-    changingPersonEmail
+    externalEmail,
+    formFor,
+    changingSignatureRequired
   } = useContext(DocumentsContext);
 
   const [signers, setSigners] = useState(documentSigners);
 
   useEffect(() => {
-    handleChangeSignatureRequired();
+    if (!document.upload_required && changingSignatureRequired)
+      handleChangeSignatureRequired();
   }, [document.signature_required, document.for_client]);
 
   useEffect(() => {
     if (!document.signature_required) handleChangeUploadRequired();
   }, [document.upload_required]);
 
-  useEffect(() => {
-    const newSigners = [...signers];
-    newSigners.map(signer => {
-      if (
-        signer.signer_type_id === getSignerTypeId("person") &&
-        changingPersonEmail &&
-        document.is_editable
-      ) {
-        signer.email = personEmail;
-      }
-    });
-    setSigners(newSigners);
-  }, [personEmail, changingPersonEmail]);
-
-  useEffect(() => {
-    const newSigners = [...signers];
-    newSigners.map(signer => {
-      if (
-        signer.signer_type_id === getSignerTypeId("client") &&
-        document.is_editable
-      ) {
-        signer.email = clientEmail.trim() === "" ? signer.email : clientEmail;
-      }
-    });
-    setSigners(newSigners);
-  }, [clientEmail]);
-
   const getSignerTypeId = type => {
     return _.get(_.find(signerTypes, { type: type }), "value");
   };
 
   const handleChangeSignatureRequired = () => {
+    const newSigners = [...signers];
+    _.remove(newSigners, signer => {
+      return (
+        signer.id === "" ||
+        typeof signer.id === "undefined" ||
+        signer.id === undefined
+      );
+    });
+
     const personSigner = {
       signer_type_id: getSignerTypeId("person"),
       email: personEmail,
-      order: 0
+      order: 0,
+      _destroy: false
     };
     const companySigner = {
-      signer_type_id: getSignerTypeId("company"),
+      signer_type_id: formFor === "person" ? getSignerTypeId("company") : "",
       email: companyEmail,
-      order: 1
+      order: formFor === "company" || document.for_client ? 0 : 1,
+      _destroy: false
     };
-    const clientSigner = {
-      signer_type_id: getSignerTypeId("client"),
-      email: clientEmail,
-      order: 2
+    const externalSigner = {
+      signer_type_id: formFor === "person" ? getSignerTypeId("external") : "",
+      email: externalEmail,
+      order: formFor === "company" || document.for_client ? 1 : 2,
+      _destroy: false
     };
-    const newSigners = [...signers];
 
     if (document.signature_required) {
-      _.remove(newSigners, signer => {
-        return (
-          signer.id === "" ||
-          typeof signer.id === "undefined" ||
-          signer.id === undefined
-        );
-      });
-
       if (newSigners.length > 0) {
         newSigners.forEach(signer => {
           delete signer["_destroy"];
@@ -89,21 +67,13 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
 
         if (newSigners.length === 1) newSigners.push(companySigner);
       } else {
-        if (document.for_client) {
-          newSigners.push(companySigner, clientSigner);
+        if (formFor === "company" || document.for_client) {
+          newSigners.push(companySigner, externalSigner);
         } else {
           newSigners.push(personSigner, companySigner);
         }
       }
     } else {
-      _.remove(newSigners, signer => {
-        return (
-          signer.id === "" ||
-          typeof signer.id === "undefined" ||
-          signer.id === undefined
-        );
-      });
-
       newSigners.forEach(signer => {
         signer["_destroy"] = true;
       });
@@ -188,7 +158,7 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
 
   const handleRemoveSigner = index => {
     const newSigners = [...signers];
-    if (newSigners[index].id !== "") {
+    if (newSigners[index].id !== "" && newSigners[index].id !== undefined) {
       newSigners[index]._destroy = true;
     } else {
       newSigners.splice(index, 1);
@@ -219,12 +189,13 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
         key={`signer-${signer.order}`}
         documentIndex={documentIndex}
         document={document}
-        signer={signer}
+        documentSigner={signer}
         signerIndex={index}
         signersOrderRequired={document.signers_order_required}
         handleMoveSigner={handleMoveSigner}
         handleRemoveSigner={handleRemoveSigner}
         t={t}
+        getSignerTypeId={getSignerTypeId}
       />
     );
   };
