@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import _ from "lodash";
+import Cleave from "cleave.js/react";
 import InputError from "./error.jsx";
 import DocumentsContext from "../../contexts/documents/DocumentsContext.jsx";
 
@@ -20,7 +21,8 @@ const DocumentValueInput = props => {
     signature_required,
     signers_order_required,
     is_editable,
-    file
+    file,
+    expire_at
   } = document;
   const isCheckbox = type === "checkbox";
   const errors = signer !== undefined ? signer.errors : document.errors;
@@ -42,6 +44,24 @@ const DocumentValueInput = props => {
 
   const drawInput = () => {
     switch (type) {
+      case "date":
+        if (is_editable) {
+          return (
+            <Cleave
+              placeholder="DD/MM/AAAA"
+              options={{
+                date: true,
+                delimiter: "/",
+                datePattern: ["d", "m", "Y"]
+              }}
+              className="form-control"
+              name={`${formName}[${index}][${attribute}]`}
+              value={expire_at}
+            />
+          );
+        } else {
+          return <p>{expire_at}</p>;
+        }
       case "file":
         if (is_editable) {
           return (
