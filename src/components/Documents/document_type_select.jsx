@@ -44,7 +44,7 @@ const DocumentTypeSelect = props => {
 
   return (
     <div className="form-group">
-      <label htmlFor="" className="label-bold">
+      <label htmlFor="" className="label-bold required">
         Tipo de Documento
       </label>
       {drawDocumentType()}

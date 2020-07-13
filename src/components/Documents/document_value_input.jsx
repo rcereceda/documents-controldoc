@@ -187,7 +187,12 @@ const DocumentValueInput = props => {
 
   const drawLabel = () => {
     return (
-      <label htmlFor="" className="label-bold">
+      <label
+        htmlFor=""
+        className={`label-bold ${
+          attribute === "file" && !upload_required ? "required" : ""
+        }`}
+      >
         {label}
       </label>
     );

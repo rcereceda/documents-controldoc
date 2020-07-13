@@ -10,7 +10,7 @@
     "attributes": {
       "document_type": "Tipo de documento",
       "file": "Archivo",
-      "expire_at": "Fecha de expiración",
+      "expire_at": "Fecha de vencimiento",
       "signature_required": "¿Requiere firma?",
       "upload_required": "¿Lo sube el trabajador?",
       "signers_order_required": "¿Requiere un orden de firma?",
