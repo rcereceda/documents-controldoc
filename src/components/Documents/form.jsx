@@ -137,8 +137,8 @@ const DocumentForm = props => {
                     {formFor === "person" &&
                       drawDocumentValue({
                         type: "date",
-                        attribute: "expire_at",
-                        label: t("documents.attributes.expire_at")
+                        attribute: "expires_at",
+                        label: t("documents.attributes.expires_at")
                       })}
                   </div>
                 </div>

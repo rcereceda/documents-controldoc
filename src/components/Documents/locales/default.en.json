@@ -10,7 +10,7 @@
     "attributes": {
       "document_type": "Document type",
       "file": "File",
-      "expire_at": "Expire at",
+      "expires_at": "Expires at",
       "signature_required": "¿Requires signature?",
       "upload_required": "¿Uploaded by employee?",
       "signers_order_required": "Requires a signing order?",

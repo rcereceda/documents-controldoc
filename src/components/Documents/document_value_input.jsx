@@ -22,7 +22,7 @@ const DocumentValueInput = props => {
     signers_order_required,
     is_editable,
     file,
-    expire_at
+    expires_at
   } = document;
   const isCheckbox = type === "checkbox";
   const errors = signer !== undefined ? signer.errors : document.errors;
@@ -56,11 +56,11 @@ const DocumentValueInput = props => {
               }}
               className="form-control"
               name={`${formName}[${index}][${attribute}]`}
-              value={expire_at}
+              value={expires_at}
             />
           );
         } else {
-          return <p>{expire_at}</p>;
+          return <p>{expires_at}</p>;
         }
       case "file":
         if (is_editable) {
