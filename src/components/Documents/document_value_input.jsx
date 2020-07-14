@@ -186,16 +186,32 @@ const DocumentValueInput = props => {
   };
 
   const drawLabel = () => {
-    return (
-      <label
-        htmlFor=""
-        className={`label-bold ${
-          attribute === "file" && !upload_required ? "required" : ""
-        }`}
-      >
-        {label}
-      </label>
-    );
+    switch (attribute) {
+      case "expires_at":
+        if (is_editable || expires_at) {
+          return (
+            <label
+              htmlFor=""
+              className={`label-bold ${
+                attribute === "file" && !upload_required ? "required" : ""
+              }`}
+            >
+              {label}
+            </label>
+          );
+        }
+      default:
+        return (
+          <label
+            htmlFor=""
+            className={`label-bold ${
+              attribute === "file" && !upload_required ? "required" : ""
+            }`}
+          >
+            {label}
+          </label>
+        );
+    }
   };
 
   return (
