@@ -1,6 +1,6 @@
 {
   "name": "documents-controldoc",
-  "version": "1.0.54",
+  "version": "1.0.60",
   "description": "",
   "author": "rcereceda",
   "license": "MIT",
@@ -58,6 +58,7 @@
     "dist"
   ],
   "dependencies": {
+    "cleave.js": "^1.6.0",
     "i18next": "^17.0.14",
     "immutability-helper": "^3.0.2",
     "react-dnd": "^10.0.2",

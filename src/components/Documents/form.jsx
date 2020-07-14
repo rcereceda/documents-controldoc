@@ -133,6 +133,14 @@ const DocumentForm = props => {
                       label: t("documents.attributes.file")
                     })}
                   </div>
+                  <div className="col-md-6 flex-fill px-3">
+                    {formFor === "person" &&
+                      drawDocumentValue({
+                        type: "date",
+                        attribute: "expires_at",
+                        label: t("documents.attributes.expires_at")
+                      })}
+                  </div>
                 </div>
               </div>
               <div className="col-md-3 flex-fill px-3">
