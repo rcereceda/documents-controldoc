@@ -200,6 +200,7 @@ const DocumentValueInput = props => {
             </label>
           );
         }
+        break;
       default:
         return (
           <label
