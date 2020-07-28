@@ -151,7 +151,6 @@ const DocumentForm = props => {
                         label: t("documents.attributes.expires_at")
                       })}
                   </div>
-
                   <div className="col-md-6 flex-fill px-3">
                     {signature_required && signature_expires_required &&
                       drawDocumentValue({
@@ -174,19 +173,18 @@ const DocumentForm = props => {
                     attribute: "signers_order_required",
                     label: t("documents.attributes.signers_order_required")
                   })}
-                {formFor === "person" &&
-                  drawDocumentValue({
-                    type: "checkbox",
-                    attribute: "upload_required",
-                    label: t("documents.attributes.upload_required")
-                  })}
-
                 {signature_required &&
                   drawDocumentValue({
                     type: "checkbox",
                     attribute: "signature_expires_required",
                     label: t("documents.attributes.signature_expires_required")
                 })}
+                {formFor === "person" &&
+                  drawDocumentValue({
+                    type: "checkbox",
+                    attribute: "upload_required",
+                    label: t("documents.attributes.upload_required")
+                  })}
               </div>
             </div>
             <div
