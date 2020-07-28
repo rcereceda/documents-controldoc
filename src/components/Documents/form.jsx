@@ -19,7 +19,10 @@ const DocumentForm = props => {
     signature_required,
     upload_required,
     can_delete,
-    signers_attributes
+    signers_attributes,
+    signature_expires_required,
+    signature_expires_at,
+
   } = document;
 
   const handleChangeStatus = (key, value) => {
@@ -46,7 +49,7 @@ const DocumentForm = props => {
         documentTemp.signers_order_required = value;
         break;
       case "person_email":
-        setPerson;
+        // setPerson;
         handleKeyUp(key, value);
         break;
       case "client_email":
@@ -55,6 +58,13 @@ const DocumentForm = props => {
       case "document_for_client":
         documentTemp.for_client = value;
         break;
+      case "signature_expires_required":
+        documentTemp.signature_expires_required = value;
+        if(!value){
+          documentTemp.signature_expires_at = null
+        }
+      case "signature_expires_at":
+        documentTemp.signature_expires_at = value;
       default:
         break;
     }
@@ -141,6 +151,14 @@ const DocumentForm = props => {
                         label: t("documents.attributes.expires_at")
                       })}
                   </div>
+                  <div className="col-md-6 flex-fill px-3">
+                    {signature_required && signature_expires_required &&
+                      drawDocumentValue({
+                        type: "date",
+                        attribute: "signature_expires_at",
+                        label: t("documents.attributes.signature_expires_at")
+                    })}
+                  </div>
                 </div>
               </div>
               <div className="col-md-3 flex-fill px-3">
@@ -155,6 +173,12 @@ const DocumentForm = props => {
                     attribute: "signers_order_required",
                     label: t("documents.attributes.signers_order_required")
                   })}
+                {signature_required &&
+                  drawDocumentValue({
+                    type: "checkbox",
+                    attribute: "signature_expires_required",
+                    label: t("documents.attributes.signature_expires_required")
+                })}
                 {formFor === "person" &&
                   drawDocumentValue({
                     type: "checkbox",

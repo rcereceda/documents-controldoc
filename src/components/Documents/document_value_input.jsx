@@ -22,7 +22,9 @@ const DocumentValueInput = props => {
     signers_order_required,
     is_editable,
     file,
-    expires_at
+    expires_at,
+    signature_expires_required,
+    signature_expires_at
   } = document;
   const isCheckbox = type === "checkbox";
   const errors = signer !== undefined ? signer.errors : document.errors;
@@ -56,11 +58,11 @@ const DocumentValueInput = props => {
               }}
               className="form-control"
               name={`${formName}[${index}][${attribute}]`}
-              value={expires_at}
+              value={document[attribute]}
             />
           );
         } else {
-          return <p>{expires_at}</p>;
+          return <p>{document[attribute]}</p>;
         }
       case "file":
         if (is_editable) {
@@ -138,6 +140,28 @@ const DocumentValueInput = props => {
                     className="custom-control-input"
                     type={type}
                     checked={signers_order_required}
+                    name={`${formName}[${index}][${attribute}]`}
+                    onChange={handleInputChange}
+                  />
+                  <label
+                    className="custom-control-label label-bold"
+                    htmlFor={`switch_${attribute}_${index}`}
+                  >
+                    {label}
+                  </label>
+                </div>
+              );
+            }
+            break;
+          case "signature_expires_required":
+            if (is_editable) {
+              return (
+                <div className="custom-control custom-switch">
+                  <input
+                    id={`switch_${attribute}_${index}`}
+                    className="custom-control-input"
+                    type={type}
+                    checked={signature_expires_required}
                     name={`${formName}[${index}][${attribute}]`}
                     onChange={handleInputChange}
                   />
