@@ -186,7 +186,11 @@ const DocumentValueInput = props => {
 
   const formatFilename = url => {
     const filename = _.last(url.split("/"));
-    if (filename.length > 25) {
+    return shortFilename(filename);
+  };
+
+  const shortFilename = filename => {
+    if(filename.length > 25){
       return filename.substring(0, 25).concat("...");
     } else {
       return filename;
@@ -196,8 +200,10 @@ const DocumentValueInput = props => {
   const drawFileLink = () => {
     if (type === "file" && _.isInteger(document.id)) {
       const url = document.file.url;
-      let filename = "";
-      if (url !== undefined && url !== null) filename = formatFilename(url);
+      let filename = document.file.filename || "";
+      if (url !== undefined && url !== null && filename == "") filename = formatFilename(url);
+
+      filename = shortFilename(filename);
 
       return (
         <div className="float-right">
