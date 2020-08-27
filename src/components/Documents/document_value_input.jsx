@@ -1,8 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, Fragment } from "react";
 import _ from "lodash";
 import Cleave from "cleave.js/react";
 import InputError from "./error.jsx";
 import DocumentsContext from "../../contexts/documents/DocumentsContext.jsx";
+import { Button, Tooltip } from "reactstrap";
 
 const DocumentValueInput = props => {
   const { formName } = useContext(DocumentsContext);
@@ -30,6 +31,9 @@ const DocumentValueInput = props => {
   const errors = signer !== undefined ? signer.errors : document.errors;
 
   const [documentFile, setDocumentFile] = useState(file);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
+  const toggle = () => setTooltipOpen(!tooltipOpen);
 
   const handleFileChange = e => {
     const newFile = e.target.files[0];
@@ -60,6 +64,43 @@ const DocumentValueInput = props => {
               name={`${formName}[${index}][${attribute}]`}
               value={document[attribute]}
             />
+          );
+        } else {
+          return <p>{document[attribute]}</p>;
+        }
+      case "datetime":
+        if (is_editable) {
+          return (
+            <Fragment>
+              <Cleave
+                placeholder="DD/MM/AAAA hh:mm"
+                options={{
+                  delimiters: ["/", "/", " ", ":"],
+                  blocks: [2, 2, 4, 2, 2]
+                }}
+                className="form-control"
+                name={`${formName}[${index}][${attribute}]`}
+                value={document[attribute]}
+              />
+              <Button
+                type="button"
+                suze="sm"
+                color="warning"
+                outline
+                id="TooltipExample"
+                className="ml-1"
+              >
+                ?
+              </Button>
+              <Tooltip
+                placement="bottom"
+                isOpen={tooltipOpen}
+                target="TooltipExample"
+                toggle={toggle}
+              >
+                La Fecha y hora deben ser mayor a la actual!
+              </Tooltip>
+            </Fragment>
           );
         } else {
           return <p>{document[attribute]}</p>;

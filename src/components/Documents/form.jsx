@@ -21,8 +21,7 @@ const DocumentForm = props => {
     can_delete,
     signers_attributes,
     signature_expires_required,
-    signature_expires_at,
-
+    signature_expires_at
   } = document;
 
   const handleChangeStatus = (key, value) => {
@@ -60,11 +59,13 @@ const DocumentForm = props => {
         break;
       case "signature_expires_required":
         documentTemp.signature_expires_required = value;
-        if(!value){
-          documentTemp.signature_expires_at = null
+        if (!value) {
+          documentTemp.signature_expires_at = null;
         }
+        break;
       case "signature_expires_at":
         documentTemp.signature_expires_at = value;
+        break;
       default:
         break;
     }
@@ -152,12 +153,13 @@ const DocumentForm = props => {
                       })}
                   </div>
                   <div className="col-md-6 flex-fill px-3">
-                    {signature_required && signature_expires_required &&
+                    {signature_required &&
+                      signature_expires_required &&
                       drawDocumentValue({
-                        type: "date",
+                        type: "datetime",
                         attribute: "signature_expires_at",
                         label: t("documents.attributes.signature_expires_at")
-                    })}
+                      })}
                   </div>
                 </div>
               </div>
@@ -178,7 +180,7 @@ const DocumentForm = props => {
                     type: "checkbox",
                     attribute: "signature_expires_required",
                     label: t("documents.attributes.signature_expires_required")
-                })}
+                  })}
                 {formFor === "person" &&
                   drawDocumentValue({
                     type: "checkbox",

@@ -19,8 +19,8 @@
       "internal_email": "Correo electrónico de quien autoriza - Interno",
       "client_email": "Correo electrónico del Cliente",
       "external_email": "Correo electrónico del usuario Externo",
-      "signature_expires_required": "¿Requiere fecha límite para firmas?",
-      "signature_expires_at": "Fecha límite para firmas",
+      "signature_expires_required": "¿Requiere fecha y hora límite para firmas?",
+      "signature_expires_at": "Fecha y hora límite para firmas",
       "signers": {
         "options": "Seleccione un opción"
       },
