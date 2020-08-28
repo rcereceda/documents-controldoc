@@ -43,18 +43,21 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
     const personSigner = {
       signer_type_id: getSignerTypeId("person"),
       email: personEmail,
+      label: "Firmante",
       order: 0,
       _destroy: false
     };
     const companySigner = {
       signer_type_id: formFor === "person" ? getSignerTypeId("company") : "",
       email: companyEmail,
+      label: "Firmante",
       order: formFor === "company" || document.for_client ? 0 : 1,
       _destroy: false
     };
     const externalSigner = {
       signer_type_id: formFor === "person" ? getSignerTypeId("external") : "",
       email: externalEmail,
+      label: "Firmante",
       order: formFor === "company" || document.for_client ? 1 : 2,
       _destroy: false
     };
@@ -149,6 +152,7 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
       id: "",
       signer_type_id: companySignerTypeId,
       email: "",
+      label: "Firmante",
       order,
       _destroy: false
     };
