@@ -46,6 +46,8 @@ const SignerForm = props => {
     _.find(companySigners, { value: documentSigner.email })
   );
 
+  const [signerLabel, setSignerLabel] = useState(documentSigner.label)
+
   useEffect(() => {
     const newSigner = { ...signer };
     newSigner.order = signerIndex;
@@ -301,6 +303,48 @@ const SignerForm = props => {
     );
   };
 
+  const drawSignerLabel = () => {
+    if(signerType != "person" && document.is_editable){
+      return(
+        <div className="col-12 mt-3">
+          <div className="form-group">
+            <label className="label-bold">
+              { t(`documents.attributes.label.label`) }
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              value={ signerLabel }
+              onChange={ (e) => setSignerLabel(event.target.value) }
+              name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][label]`}
+            />
+            <small className="text-muted">
+              { t(`documents.attributes.label.message`) }
+            </small>
+            <InputError
+              attr={ "label" }
+              errors={ signer.errors }
+            />
+          </div>
+        </div>
+      )
+    } else if (signerType != "person"){
+      return(
+        <div className="col-12">
+          <div className="form-group">
+            <label className="label-bold">
+              Etiqueta
+            </label>
+            <p>
+              { signer.label }
+            </p>
+
+          </div>
+        </div>
+      )
+    }
+  }
+
   return (
     <div
       className={`card bg-light mb-3 px-3 pt-3 ${
@@ -338,7 +382,9 @@ const SignerForm = props => {
         {drawHiddenInput("id")}
         {drawHiddenInput("order")}
         {drawHiddenInput("_destroy")}
+        { drawSignerLabel() }
       </div>
+
     </div>
   );
 };
