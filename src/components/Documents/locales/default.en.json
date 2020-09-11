@@ -25,6 +25,10 @@
       "signer_types": {
         "options": "Select an option",
         "label": "Signer type"
+      },
+      "label": {
+        "message": "Si no seleccionas un rol, se establecerá por defecto como 'Firmante'",
+        "label": "Role"
       }
     },
     "action": {
