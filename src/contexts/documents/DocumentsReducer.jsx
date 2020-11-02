@@ -1,6 +1,8 @@
+/** @format */
+
 import {
   CHANGE_EXTERNAL_EMAIL,
-  CHANGE_SIGNATURE_REQUIRED
+  CHANGE_SIGNATURE_REQUIRED,
 } from "../../types/index.jsx";
 
 export default (state, action) => {
@@ -9,12 +11,12 @@ export default (state, action) => {
       return {
         ...state,
         externalEmail: action.payload,
-        changingExternalEmail: true
+        changingExternalEmail: true,
       };
     case CHANGE_SIGNATURE_REQUIRED:
       return {
         ...state,
-        changingSignatureRequired: true
+        changingSignatureRequired: true,
       };
     default:
       return state;

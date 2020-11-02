@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState, useContext, Fragment } from "react";
 import _ from "lodash";
 import Cleave from "cleave.js/react";
@@ -5,7 +7,7 @@ import InputError from "./error.jsx";
 import DocumentsContext from "../../contexts/documents/DocumentsContext.jsx";
 import { Button, Tooltip } from "reactstrap";
 
-const DocumentValueInput = props => {
+const DocumentValueInput = (props) => {
   const { formName } = useContext(DocumentsContext);
   const {
     type,
@@ -15,7 +17,7 @@ const DocumentValueInput = props => {
     label,
     signer_type,
     handleChangeStatus,
-    signer
+    signer,
   } = props;
   const {
     upload_required,
@@ -25,7 +27,7 @@ const DocumentValueInput = props => {
     file,
     expires_at,
     signature_expires_required,
-    signature_expires_at
+    signature_expires_at,
   } = document;
   const isCheckbox = type === "checkbox";
   const errors = signer !== undefined ? signer.errors : document.errors;
@@ -35,12 +37,12 @@ const DocumentValueInput = props => {
 
   const toggle = () => setTooltipOpen(!tooltipOpen);
 
-  const handleFileChange = e => {
+  const handleFileChange = (e) => {
     const newFile = e.target.files[0];
     setDocumentFile(newFile);
   };
 
-  const handleInputChange = e => {
+  const handleInputChange = (e) => {
     const input = e.target;
     const setValue = input.type === "checkbox" ? input.checked : input.value;
     if (signer_type !== undefined)
@@ -58,7 +60,7 @@ const DocumentValueInput = props => {
               options={{
                 date: true,
                 delimiter: "/",
-                datePattern: ["d", "m", "Y"]
+                datePattern: ["d", "m", "Y"],
               }}
               className="form-control"
               name={`${formName}[${index}][${attribute}]`}
@@ -76,7 +78,7 @@ const DocumentValueInput = props => {
                 placeholder="DD/MM/AAAA hh:mm"
                 options={{
                   delimiters: ["/", "/", " ", ":"],
-                  blocks: [2, 2, 4, 2, 2]
+                  blocks: [2, 2, 4, 2, 2],
                 }}
                 className="form-control"
                 name={`${formName}[${index}][${attribute}]`}
@@ -133,6 +135,12 @@ const DocumentValueInput = props => {
                     name={`${formName}[${index}][${attribute}]`}
                     onChange={handleInputChange}
                   />
+                  <input
+                    type="hidden"
+                    checked={signature_required}
+                    name={`${formName}[${index}][${attribute}]`}
+                    value={signature_required}
+                  />
                   <label
                     className="custom-control-label label-bold"
                     htmlFor={`switch_${attribute}_${index}`}
@@ -162,6 +170,12 @@ const DocumentValueInput = props => {
                     name={`${formName}[${index}][${attribute}]`}
                     onChange={handleInputChange}
                   />
+                  <input
+                    type="hidden"
+                    checked={upload_required}
+                    name={`${formName}[${index}][${attribute}]`}
+                    value={upload_required}
+                  />
                   <label
                     className="custom-control-label label-bold"
                     htmlFor={`switch_${attribute}_${index}`}
@@ -183,6 +197,12 @@ const DocumentValueInput = props => {
                     checked={signers_order_required}
                     name={`${formName}[${index}][${attribute}]`}
                     onChange={handleInputChange}
+                  />
+                  <input
+                    type="hidden"
+                    checked={signers_order_required}
+                    name={`${formName}[${index}][${attribute}]`}
+                    value={signers_order_required}
                   />
                   <label
                     className="custom-control-label label-bold"
@@ -206,6 +226,12 @@ const DocumentValueInput = props => {
                     name={`${formName}[${index}][${attribute}]`}
                     onChange={handleInputChange}
                   />
+                  <input
+                    type="hidden"
+                    checked={signature_expires_required}
+                    name={`${formName}[${index}][${attribute}]`}
+                    value={signature_expires_required}
+                  />
                   <label
                     className="custom-control-label label-bold"
                     htmlFor={`switch_${attribute}_${index}`}
@@ -225,7 +251,7 @@ const DocumentValueInput = props => {
     }
   };
 
-  const formatFilename = url => {
+  const formatFilename = (url) => {
     const filename = _.last(url.split("/"));
     if (filename.length > 25) {
       return filename.substring(0, 25).concat("...");
