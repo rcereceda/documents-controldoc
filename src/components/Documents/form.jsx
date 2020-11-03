@@ -10,14 +10,14 @@ import DocumentValueInput from "./document_value_input.jsx";
 import DocumentsContext from "../../contexts/documents/DocumentsContext.jsx";
 import SignersList from "./SignersList.jsx";
 
-const DocumentForm = (props) => {
+const DocumentForm = props => {
   const { t, index, handleRemoveDocument } = props;
   const {
     handleKeyUp,
     formName,
     formFor,
     handleChangeSignature,
-    documentTypes,
+    documentTypes
   } = useContext(DocumentsContext);
 
   const [document, setDocument] = useState(props.document);
@@ -25,9 +25,9 @@ const DocumentForm = (props) => {
     props.document
       ? _.find(
           documentTypes,
-          (type) => type.id === props.document.document_type_id,
+          type => type.id === props.document.document_type_id
         )
-      : {},
+      : {}
   );
 
   const {
@@ -36,7 +36,7 @@ const DocumentForm = (props) => {
     can_delete,
     signers_attributes,
     signature_expires_required,
-    signature_expires_at,
+    signature_expires_at
   } = document;
 
   const handleChangeStatus = (key, value) => {
@@ -47,8 +47,8 @@ const DocumentForm = (props) => {
         documentTemp.document_type_id = value.value;
         documentTemp.for_client = value.for_client;
         if (value.id !== document.document_type_id) {
-          documentTemp.signature_required = value.defaultSignersOrder;
-          documentTemp.signers_order_required = value.defaultSignersOrder;
+          documentTemp.signature_required = value.default_signers_order;
+          documentTemp.signers_order_required = value.default_signers_order;
         }
         setDocumentTypeSelected(value);
         handleChangeSignature();
@@ -129,7 +129,7 @@ const DocumentForm = (props) => {
     );
   };
 
-  const drawDocumentValue = (options) => {
+  const drawDocumentValue = options => {
     return (
       <DocumentValueInput
         type={options["type"]}
@@ -160,7 +160,7 @@ const DocumentForm = (props) => {
                     {drawDocumentValue({
                       type: "file",
                       attribute: "file",
-                      label: t("documents.attributes.file"),
+                      label: t("documents.attributes.file")
                     })}
                   </div>
                   <div className="col-md-6 flex-fill px-3">
@@ -168,7 +168,7 @@ const DocumentForm = (props) => {
                       drawDocumentValue({
                         type: "date",
                         attribute: "expires_at",
-                        label: t("documents.attributes.expires_at"),
+                        label: t("documents.attributes.expires_at")
                       })}
                   </div>
                   <div className="col-md-6 flex-fill px-3">
@@ -177,7 +177,7 @@ const DocumentForm = (props) => {
                       drawDocumentValue({
                         type: "datetime",
                         attribute: "signature_expires_at",
-                        label: t("documents.attributes.signature_expires_at"),
+                        label: t("documents.attributes.signature_expires_at")
                       })}
                   </div>
                 </div>
@@ -186,25 +186,25 @@ const DocumentForm = (props) => {
                 {drawDocumentValue({
                   type: "checkbox",
                   attribute: "signature_required",
-                  label: t("documents.attributes.signature_required"),
+                  label: t("documents.attributes.signature_required")
                 })}
                 {signature_required &&
                   drawDocumentValue({
                     type: "checkbox",
                     attribute: "signers_order_required",
-                    label: t("documents.attributes.signers_order_required"),
+                    label: t("documents.attributes.signers_order_required")
                   })}
                 {signature_required &&
                   drawDocumentValue({
                     type: "checkbox",
                     attribute: "signature_expires_required",
-                    label: t("documents.attributes.signature_expires_required"),
+                    label: t("documents.attributes.signature_expires_required")
                   })}
                 {formFor === "person" &&
                   drawDocumentValue({
                     type: "checkbox",
                     attribute: "upload_required",
-                    label: t("documents.attributes.upload_required"),
+                    label: t("documents.attributes.upload_required")
                   })}
               </div>
             </div>
@@ -246,7 +246,7 @@ DocumentForm.propTypes = {
   index: PropTypes.number.isRequired,
   document: PropTypes.object.isRequired,
   handleRemoveDocument: PropTypes.func.isRequired,
-  t: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired
 };
 
 export default memo(DocumentForm);
