@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState, useContext, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
@@ -5,7 +7,13 @@ import _ from "lodash";
 import SignerForm from "./signer_form.jsx";
 import DocumentsContext from "../../contexts/documents/DocumentsContext.jsx";
 
-const SignersList = ({ documentSigners, documentIndex, document, t }) => {
+const SignersList = ({
+  documentSigners,
+  documentIndex,
+  document,
+  t,
+  documentTypeSelected
+}) => {
   const {
     signerTypes,
     companyEmail,
@@ -20,7 +28,12 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
   useEffect(() => {
     if (!document.upload_required && changingSignatureRequired)
       handleChangeSignatureRequired();
-  }, [document.signature_required, document.for_client]);
+  }, [
+    document.signature_required,
+    document.for_client,
+    document.document_type_id,
+    documentTypeSelected
+  ]);
 
   useEffect(() => {
     if (!document.signature_required) handleChangeUploadRequired();
@@ -31,7 +44,7 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
   };
 
   const handleChangeSignatureRequired = () => {
-    const newSigners = [...signers];
+    let newSigners = [...signers];
     _.remove(newSigners, signer => {
       return (
         signer.id === "" ||
@@ -40,46 +53,62 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
       );
     });
 
-    const personSigner = {
-      signer_type_id: getSignerTypeId("person"),
-      email: personEmail,
-      label: "Firmante",
-      order: 0,
-      _destroy: false
-    };
-    const companySigner = {
-      signer_type_id: formFor === "person" ? getSignerTypeId("company") : "",
-      email: companyEmail,
-      label: "Firmante",
-      order: formFor === "company" || document.for_client ? 0 : 1,
-      _destroy: false
-    };
-    const externalSigner = {
-      signer_type_id: formFor === "person" ? getSignerTypeId("external") : "",
-      email: externalEmail,
-      label: "Firmante",
-      order: formFor === "company" || document.for_client ? 1 : 2,
-      _destroy: false
-    };
-
-    if (document.signature_required) {
-      if (newSigners.length > 0) {
-        newSigners.forEach(signer => {
-          delete signer["_destroy"];
-        });
-
-        if (newSigners.length === 1) newSigners.push(companySigner);
-      } else {
-        if (formFor === "company" || document.for_client) {
-          newSigners.push(companySigner, externalSigner);
-        } else {
-          newSigners.push(personSigner, companySigner);
-        }
-      }
-    } else {
+    if (documentTypeSelected && documentTypeSelected.default_signers_order) {
       newSigners.forEach(signer => {
         signer["_destroy"] = true;
       });
+
+      _.map(_.reverse(documentTypeSelected.signers_order), so => {
+        newSigners.unshift({
+          signer_type_id: getSignerTypeId(so.type),
+          email: so.type === "person" ? personEmail : so.email,
+          label: so.rol,
+          order: so.order,
+          _destroy: false
+        });
+      });
+    } else {
+      const personSigner = {
+        signer_type_id: getSignerTypeId("person"),
+        email: personEmail,
+        label: "Firmante",
+        order: 0,
+        _destroy: false
+      };
+      const companySigner = {
+        signer_type_id: formFor === "person" ? getSignerTypeId("company") : "",
+        email: companyEmail,
+        label: "Firmante",
+        order: formFor === "company" || document.for_client ? 0 : 1,
+        _destroy: false
+      };
+      const externalSigner = {
+        signer_type_id: formFor === "person" ? getSignerTypeId("external") : "",
+        email: externalEmail,
+        label: "Firmante",
+        order: formFor === "company" || document.for_client ? 1 : 2,
+        _destroy: false
+      };
+
+      if (document.signature_required) {
+        if (newSigners.length > 0) {
+          newSigners.forEach(signer => {
+            delete signer["_destroy"];
+          });
+
+          if (newSigners.length === 1) newSigners.push(companySigner);
+        } else {
+          if (formFor === "company" || document.for_client) {
+            newSigners.push(companySigner, externalSigner);
+          } else {
+            newSigners.push(personSigner, companySigner);
+          }
+        }
+      } else {
+        newSigners.forEach(signer => {
+          signer["_destroy"] = true;
+        });
+      }
     }
     setSigners(newSigners);
   };
@@ -130,10 +159,7 @@ const SignersList = ({ documentSigners, documentIndex, document, t }) => {
       const dragSigner = signers[dragIndex];
       setSigners(
         update(signers, {
-          $splice: [
-            [dragIndex, 1],
-            [hoverIndex, 0, dragSigner]
-          ]
+          $splice: [[dragIndex, 1], [hoverIndex, 0, dragSigner]]
         })
       );
     },

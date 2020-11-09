@@ -1,20 +1,22 @@
+/** @format */
+
 import React, { useState, useEffect, useContext } from "react";
 import Select from "react-select";
 import InputError from "./error.jsx";
 import DocumentsContext from "../../contexts/documents/DocumentsContext.jsx";
 
-const DocumentTypeSelect = props => {
+const DocumentTypeSelect = (props) => {
   const { documentTypes, formName } = useContext(DocumentsContext);
   const { t, document, handleChangeStatus, index } = props;
   const [documentType, setDocumentType] = useState(
-    documentTypes.find(item => {
+    documentTypes.find((item) => {
       return item.value === document.document_type_id;
-    }) || ""
+    }) || "",
   );
 
   useEffect(() => {
     const selectedOption =
-      documentTypes.find(item => {
+      documentTypes.find((item) => {
         return item.value === document.document_type_id;
       }) || "";
     setDocumentType(selectedOption);
@@ -36,9 +38,8 @@ const DocumentTypeSelect = props => {
     }
   };
 
-  const handleChangeDocumentType = selectedOption => {
-    handleChangeStatus("document_type_id", selectedOption.value);
-    handleChangeStatus("document_for_client", selectedOption.for_client);
+  const handleChangeDocumentType = (selectedOption) => {
+    handleChangeStatus("document_type", selectedOption);
     setDocumentType(selectedOption);
   };
 
