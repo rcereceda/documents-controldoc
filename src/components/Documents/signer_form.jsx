@@ -4,7 +4,7 @@ import React, {
   useContext,
   useState,
   useRef,
-  useEffect
+  useEffect,
 } from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
@@ -15,10 +15,10 @@ import InputError from "./error.jsx";
 
 const style = {
   border: "1px dashed gray",
-  cursor: "move"
+  cursor: "move",
 };
 
-const SignerForm = props => {
+const SignerForm = (props) => {
   const {
     document,
     documentIndex,
@@ -28,7 +28,7 @@ const SignerForm = props => {
     signersOrderRequired,
     handleMoveSigner,
     handleRemoveSigner,
-    getSignerTypeId
+    getSignerTypeId,
   } = props;
 
   const {
@@ -38,7 +38,7 @@ const SignerForm = props => {
     handleChangeEmail,
     formFor,
     externalEmail,
-    changingExternalEmail
+    changingExternalEmail,
   } = useContext(DocumentsContext);
 
   const [signer, setSigner] = useState(documentSigner);
@@ -46,7 +46,7 @@ const SignerForm = props => {
     _.find(companySigners, { value: documentSigner.email })
   );
 
-  const [signerLabel, setSignerLabel] = useState(documentSigner.label)
+  const [signerLabel, setSignerLabel] = useState(documentSigner.label);
 
   useEffect(() => {
     const newSigner = { ...signer };
@@ -102,13 +102,13 @@ const SignerForm = props => {
       }
       handleMoveSigner(dragIndex, hoverIndex);
       item.index = hoverIndex;
-    }
+    },
   });
   const [{ isDragging }, drag] = useDrag({
     item: { type: "card", id: signer.order, index: signerIndex },
-    collect: monitor => ({
-      isDragging: monitor.isDragging()
-    })
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
   });
   const opacity = isDragging ? 0 : 1;
   drag(drop(ref));
@@ -123,7 +123,7 @@ const SignerForm = props => {
     handleRemoveSigner(signerIndex);
   };
 
-  const handleChangeExternalEmail = e => {
+  const handleChangeExternalEmail = (e) => {
     const value = e.target.value;
     if (formFor === "person") {
       handleChangeEmail(value);
@@ -134,7 +134,7 @@ const SignerForm = props => {
     }
   };
 
-  const drawDocumentValue = options => {
+  const drawDocumentValue = (options) => {
     switch (signerType) {
       case "company":
         return (
@@ -146,7 +146,7 @@ const SignerForm = props => {
             </label>
             {document.is_editable ? (
               <Select
-                onChange={newValue => {
+                onChange={(newValue) => {
                   setSignerValue(newValue);
                 }}
                 options={companySigners}
@@ -157,7 +157,7 @@ const SignerForm = props => {
                 )} --`}
               />
             ) : (
-              <p>{signerValue.label}</p>
+              <p>{signerValue ? signerValue.label : documentSigner.email}</p>
             )}
             <InputError attr={options["attribute"]} errors={signer.errors} />
           </Fragment>
@@ -201,7 +201,7 @@ const SignerForm = props => {
                     type="text"
                     value={signer.email}
                     name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][${options["attribute"]}]`}
-                    onChange={e => handleChangeExternalEmail(e)}
+                    onChange={(e) => handleChangeExternalEmail(e)}
                   />
                 </div>
                 <InputError
@@ -244,7 +244,7 @@ const SignerForm = props => {
     }
   };
 
-  const drawHiddenInput = attribute => {
+  const drawHiddenInput = (attribute) => {
     if (document.is_editable) {
       return (
         <input
@@ -266,14 +266,14 @@ const SignerForm = props => {
             {t(`documents.attributes.signer_types.label`)}
           </label>
           <Select
-            onChange={newValue => {
+            onChange={(newValue) => {
               const newSigner = { ...signer };
               newSigner.signer_type_id = newValue.value;
               setSigner(newSigner);
             }}
             options={_.filter(
               signerTypes,
-              signerType => signerType.type !== "person"
+              (signerType) => signerType.type !== "person"
             )}
             value={_.find(signerTypes, { value: signer.signer_type_id })}
             name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][signer_type_id]`}
@@ -304,46 +304,38 @@ const SignerForm = props => {
   };
 
   const drawSignerLabel = () => {
-    if(signerType != "person" && document.is_editable){
-      return(
+    if (signerType != "person" && document.is_editable) {
+      return (
         <div className="col-12 mt-3">
           <div className="form-group">
             <label className="label-bold">
-              { t(`documents.attributes.label.label`) }
+              {t(`documents.attributes.label.label`)}
             </label>
             <input
               className="form-control"
               type="text"
-              value={ signerLabel }
-              onChange={ (e) => setSignerLabel(event.target.value) }
+              value={signerLabel}
+              onChange={(e) => setSignerLabel(event.target.value)}
               name={`${formName}[${documentIndex}][signers_attributes][${signerIndex}][label]`}
             />
             <small className="text-muted">
-              { t(`documents.attributes.label.message`) }
+              {t(`documents.attributes.label.message`)}
             </small>
-            <InputError
-              attr={ "label" }
-              errors={ signer.errors }
-            />
+            <InputError attr={"label"} errors={signer.errors} />
           </div>
         </div>
-      )
-    } else if (signerType != "person"){
-      return(
+      );
+    } else if (signerType != "person") {
+      return (
         <div className="col-12">
           <div className="form-group">
-            <label className="label-bold">
-              Etiqueta
-            </label>
-            <p>
-              { signer.label }
-            </p>
-
+            <label className="label-bold">Etiqueta</label>
+            <p>{signer.label}</p>
           </div>
         </div>
-      )
+      );
     }
-  }
+  };
 
   return (
     <div
@@ -372,7 +364,7 @@ const SignerForm = props => {
             attribute: "email",
             signer_email: signer.email,
             signer_type: signerType,
-            label: t(`documents.attributes.${signerType}_email`)
+            label: t(`documents.attributes.${signerType}_email`),
           })}
         </div>
         <div className={`col-md-${formFor === "person" ? "6" : "1"}`}>
@@ -382,9 +374,8 @@ const SignerForm = props => {
         {drawHiddenInput("id")}
         {drawHiddenInput("order")}
         {drawHiddenInput("_destroy")}
-        { drawSignerLabel() }
+        {drawSignerLabel()}
       </div>
-
     </div>
   );
 };
@@ -396,7 +387,7 @@ SignerForm.propTypes = {
   handleRemoveSigner: PropTypes.func.isRequired,
   signerIndex: PropTypes.number.isRequired,
   documentSigner: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
 };
 
 export default memo(SignerForm);
